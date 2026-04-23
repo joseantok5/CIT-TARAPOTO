@@ -1600,7 +1600,8 @@ function eliminarSesion(idx){
 function renderSesiones(){
   const p=pacientes[pacienteActivo];
   const todasSes=arrOf(p.sesiones);
-  const ses=usuarioActual?.esAdmin ? todasSes : todasSes.filter(s=>s.autorEmail===usuarioActual?.email);
+  const miTipoSes = !usuarioActual?.esAdmin ? getMiTipoEnPaciente() : null;
+  const ses=usuarioActual?.esAdmin ? todasSes : todasSes.filter(s=>miTipoSes ? s.tipo===miTipoSes : s.autorEmail===usuarioActual?.email);
   const sesRev=ses.slice().reverse();
   // Calcular índices originales para edición
   const idxMap=sesRev.map(s=>todasSes.indexOf(s));
@@ -1650,7 +1651,9 @@ function renderSesiones(){
 // ── HITOS ─────────────────────────────────────────────────────────
 function renderHitos(){
   const p=pacientes[pacienteActivo];
-  const hit=arrOf(p.hitos);
+  const todasHitos=arrOf(p.hitos);
+  const miTipoH = !usuarioActual?.esAdmin ? getMiTipoEnPaciente() : null;
+  const hit = usuarioActual?.esAdmin ? todasHitos : todasHitos.filter(h=>miTipoH ? h.tipo===miTipoH : h.tipo===miTipoH);
   const canEdit=usuarioActual?.esAdmin;
   document.getElementById('panel-4').innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
@@ -1725,7 +1728,8 @@ function renderResumen(){
 
   const p=pacientes[pacienteActivo];
   const todasSes=arrOf(p.sesiones);
-  const allSes=usuarioActual?.esAdmin?todasSes:todasSes.filter(s=>s.autorEmail===usuarioActual?.email);
+  const miTipoRes=!usuarioActual?.esAdmin?getMiTipoEnPaciente():null;
+  const allSes=usuarioActual?.esAdmin?todasSes:todasSes.filter(s=>miTipoRes?s.tipo===miTipoRes:s.autorEmail===usuarioActual?.email);
 
   let ses, etiqueta;
   if(modo==='rango' && desde && hasta){
@@ -1787,7 +1791,7 @@ function renderResumen(){
       ${Object.entries(dm).map(([d,v])=>{const pi=avg(v.pis),pf=avg(v.pfs),a=pf-pi;const col=pf>=4?'#16a34a':pf>=3?'#1e40af':'#d97706';return`<div class="prog-wrap"><div class="prog-label"><span>${d}</span><span style="display:flex;gap:5px;align-items:center">${sc(Math.round(pf*10)/10)} ${ts(a)}</span></div><div class="prog-track"><div class="prog-fill" style="width:${Math.round(pf/5*100)}%;background:${col}"></div></div></div>`;}).join('')}
     </div>
     <div class="card">
-      <div class="card-title">Distribución</div>
+      <div class="card-title">${usuarioActual?.esAdmin?'Distribución':'Mi progreso — Sesiones realizadas vs planificadas'}</div>
       <div class="chart-wrap" style="height:175px"><canvas id="chartRes" role="img" aria-label="Sesiones del período">Gráfico</canvas></div>
     </div>
     ${recomendaciones.length?`<div class="card">
@@ -1806,11 +1810,36 @@ function renderResumen(){
   if(resChart){resChart.destroy();resChart=null;}
   setTimeout(()=>{
     const cv=document.getElementById('chartRes'); if(!cv)return;
-    resChart=new Chart(cv,{type:'bar',
-      data:{labels:tipos.map(t=>t.tipo.replace('Terapia de ','').replace('Terapia ','').replace(' (ABA)','')),
-        datasets:[{data:tipos.map(t=>t.n),backgroundColor:tipos.map(t=>TIPO_HEX[t.tipo]||'#888'),borderWidth:0,borderRadius:4}]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-        scales:{y:{beginAtZero:true,ticks:{stepSize:1,font:{size:10}},grid:{color:'rgba(0,0,0,.04)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
+    if(usuarioActual?.esAdmin){
+      // Admin: gráfico de distribución por tipo de terapia (barras)
+      resChart=new Chart(cv,{type:'bar',
+        data:{labels:tipos.map(t=>t.tipo.replace('Terapia de ','').replace('Terapia ','').replace(' (ABA)','')),
+          datasets:[{data:tipos.map(t=>t.n),backgroundColor:tipos.map(t=>TIPO_HEX[t.tipo]||'#888'),borderWidth:0,borderRadius:4}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+          scales:{y:{beginAtZero:true,ticks:{stepSize:1,color:'rgba(255,255,255,.5)',font:{size:10}},grid:{color:'rgba(255,255,255,.06)'}},
+            x:{ticks:{color:'rgba(255,255,255,.5)',font:{size:10}},grid:{display:false}}}}});
+    } else {
+      // Terapeuta: gráfico de progreso — sesiones realizadas vs planificadas por objetivo
+      const miTipo=getMiTipoEnPaciente();
+      const planTer=arrOf(pacientes[pacienteActivo]?.plan).filter(o=>o.tipo===miTipo);
+      const labels=planTer.map(o=>o.objetivo.substring(0,25)+(o.objetivo.length>25?'...':''));
+      const realizadas=planTer.map(o=>ses.filter(s=>s.objetivoTrabajado===o.objetivo).length);
+      const planificadas=planTer.map(o=>o.sesionesPlani||0);
+      if(!planTer.length){
+        cv.parentElement.innerHTML='<div style="text-align:center;padding:30px;font-size:12px;color:rgba(255,255,255,.4)">Sin objetivos planificados aún</div>';
+        return;
+      }
+      resChart=new Chart(cv,{type:'bar',
+        data:{labels,
+          datasets:[
+            {label:'Realizadas',data:realizadas,backgroundColor:'rgba(99,179,237,.8)',borderWidth:0,borderRadius:4},
+            {label:'Planificadas',data:planificadas,backgroundColor:'rgba(255,255,255,.12)',borderWidth:0,borderRadius:4}
+          ]},
+        options:{responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{display:true,labels:{color:'rgba(255,255,255,.6)',font:{size:10},boxWidth:12}}},
+          scales:{y:{beginAtZero:true,ticks:{stepSize:1,color:'rgba(255,255,255,.5)',font:{size:10}},grid:{color:'rgba(255,255,255,.06)'}},
+            x:{ticks:{color:'rgba(255,255,255,.5)',font:{size:9},maxRotation:30},grid:{display:false}}}}});
+    }
   },100);
 }
 
