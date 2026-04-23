@@ -465,7 +465,8 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
     <div class="top-right">
       <span class="sync-badge sync-ok" id="badge-sync">En línea</span>
       <button class="btn-icon" id="btn-add-pac" onclick="abrirNuevoPaciente()" title="Nuevo paciente" style="display: flex;">+</button>
-      <button class="btn-icon" id="btn-directorio" onclick="showScreen(&#39;screen-directorio&#39;);renderDirectorio()" title="Directorio de terapeutas" style="display: flex; font-size: 13px;">👥</button>
+      <button class="btn-icon" id="btn-directorio" onclick="showScreen('screen-directorio');renderDirectorio()" title="Directorio de terapeutas" style="display: flex; font-size: 13px;">👥</button>
+      <button class="btn-icon" id="btn-notif" onclick="abrirNotificaciones()" title="Notificaciones" style="display:none;font-size:13px;position:relative">🔔<span id="notif-badge" style="position:absolute;top:-3px;right:-3px;background:#f87171;color:white;font-size:9px;font-weight:700;border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center;line-height:16px"></span></button>
       <button class="btn-icon" onclick="doLogout()" title="Cerrar sesión" style="font-size:13px">⏻</button>
     </div>
   </div>
@@ -833,6 +834,21 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
     </div>
   </div>
 </div>
+<!-- Notificaciones Admin -->
+<div class="modal-bg" id="modal-notif">
+  <div class="modal" style="max-height:80vh">
+    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div class="modal-title" style="margin-bottom:0">🔔 Notificaciones</div>
+      <button class="btn" style="flex:none;padding:5px 12px;font-size:11px" onclick="marcarTodasLeidas()">Marcar leídas</button>
+    </div>
+    <div id="notif-lista"><div class="empty-state"><div class="empty-icon">🔔</div><div class="empty-text">Sin notificaciones</div></div></div>
+    <div class="modal-actions" style="margin-top:10px">
+      <button class="btn" onclick="closeModal('modal-notif')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-bg" id="modal-hito">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -1021,6 +1037,9 @@ auth.onAuthStateChanged(user => {
     document.getElementById('btn-add-pac').style.display = esAdmin?'flex':'none';
     document.getElementById('fab-lista').style.display   = esAdmin?'flex':'none';
     document.getElementById('btn-directorio').style.display = esAdmin?'flex':'none';
+    // Campana de notificaciones solo para admin
+    document.getElementById('btn-notif').style.display = esAdmin?'flex':'none';
+    if(esAdmin) escucharNotificaciones();
     // Pestañas solo para admin
     document.querySelectorAll('.tab-admin-only').forEach(t=>{
       t.style.display = esAdmin ? '' : 'none';
@@ -1428,24 +1447,31 @@ function renderPlan(){
   const p=pacientes[pacienteActivo];
   const pl=arrOf(p.plan);
   const todasSes=arrOf(p.sesiones);
-  const canEdit=usuarioActual?.esAdmin;
+  const esAdmin=usuarioActual?.esAdmin;
+  const miTipo=getMiTipoEnPaciente();
+  // Admin ve todo, terapeuta solo su especialidad
+  const plFiltrado=esAdmin ? pl : pl.filter(o=>o.tipo===miTipo);
+  const puedeAgregar=esAdmin||!!miTipo;
   document.getElementById('panel-2').innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <div style="font-size:14px;font-weight:700;color:#a78bfa">Plan terapéutico</div>
-      ${canEdit?`<button class="btn btn-teal" style="flex:none;padding:6px 14px;font-size:12px" onclick="document.getElementById('p-modal-title').textContent='Nuevo objetivo terapéutico';document.getElementById('p-edit-idx').value='-1';openModal('modal-plan')">+ Objetivo</button>`:''}
+      <div style="font-size:14px;font-weight:700;color:#a78bfa">
+        ${esAdmin?'Plan terapéutico completo':`Mi plan — ${miTipo||'Sin especialidad asignada'}`}
+      </div>
+      ${puedeAgregar?`<button class="btn btn-teal" style="flex:none;padding:6px 14px;font-size:12px" onclick="document.getElementById('p-modal-title').textContent='Nuevo objetivo terapéutico';document.getElementById('p-edit-idx').value='-1';openModal('modal-plan')">+ Objetivo</button>`:''}
     </div>
-    ${!pl.length?'<div class="card"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Sin objetivos registrados</div></div></div>':
-      pl.map(o=>{
-        // Contar sesiones reales que trabajaron este objetivo
+    ${!miTipo&&!esAdmin?`<div class="card" style="background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.2);margin-bottom:10px;padding:12px 14px"><div style="font-size:12px;color:#fbbf24">⚠️ No estás asignada como terapeuta de este paciente. Contacta al administrador.</div></div>`:''}
+    ${!plFiltrado.length?'<div class="card"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Sin objetivos registrados</div></div></div>':
+      plFiltrado.map(o=>{
         const sesReal=todasSes.filter(s=>s.objetivoTrabajado&&s.objetivoTrabajado===o.objetivo).length;
         const plani=o.sesionesPlani||o.frec||0;
         const pct=plani>0?Math.min(Math.round(sesReal/plani*100),100):0;
         const colorBarra=pct>=100?'#16a34a':pct>=50?'#0e7490':'#d97706';
         const idx=pl.indexOf(o);
+        const puedoEditar=puedeEditarPlan(o);
         return`<div class="plan-card">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px">
             <div style="font-size:12px;font-weight:500;line-height:1.45;flex:1">${o.objetivo}</div>
-            ${canEdit?`<div style="display:flex;gap:5px;flex-shrink:0">
+            ${puedoEditar?`<div style="display:flex;gap:5px;flex-shrink:0">
               <button class="btn-edit" onclick="editarObjetivoPlan(${idx})" style="font-size:10px;padding:3px 8px" title="Editar">✏️</button>
               <button class="btn-del" onclick="eliminarObjetivoPlan(${idx})" style="font-size:10px;padding:3px 8px" title="Eliminar">🗑</button>
             </div>`:''}
@@ -2076,9 +2102,14 @@ function eliminarHito(idx){
 }
 
 function guardarPlan(){
-  if(!usuarioActual?.esAdmin){toast('Solo el administrador puede editar el plan','err');return;}
+  if(!usuarioActual){toast('Debes iniciar sesión','err');return;}
+  if(!puedeEditarPlan(null)){toast('No estás asignada como terapeuta de este paciente','err');return;}
   const tipo=document.getElementById('p-tipo').value,obj=document.getElementById('p-obj').value;
   if(!tipo||!obj){alert('Selecciona el tipo de terapia e ingresa el objetivo.');return;}
+  if(!usuarioActual.esAdmin){
+    const miTipo=getMiTipoEnPaciente();
+    if(tipo!==miTipo){toast('Solo puedes agregar objetivos de tu especialidad: '+miTipo,'err');return;}
+  }
   const p=pacientes[pacienteActivo];
   const pl=arrOf(p.plan);
   const editIdx=parseInt(document.getElementById('p-edit-idx').value);
@@ -2089,18 +2120,16 @@ function guardarPlan(){
     objetivo:obj,
     nivel:document.getElementById('p-nivel').value,
     sesionesPlani:parseInt(document.getElementById('p-sesiones').value)||0,
+    autorEmail:usuarioActual.email,
     ts:Date.now()
   };
-  if(editIdx>=0 && editIdx<pl.length){
-    entrada.n=pl[editIdx].n;
-    pl[editIdx]=entrada;
-  } else {
-    entrada.n=pl.length+1;
-    pl.push(entrada);
-  }
+  const esEdicion=editIdx>=0&&editIdx<pl.length;
+  if(esEdicion){entrada.n=pl[editIdx].n;pl[editIdx]=entrada;}
+  else{entrada.n=pl.length+1;pl.push(entrada);}
   DB.child(`pacientes/${pacienteActivo}/plan`).set(pl)
     .then(()=>{
-      toast(editIdx>=0?'Objetivo actualizado':'Objetivo guardado');
+      toast(esEdicion?'Objetivo actualizado':'Objetivo guardado');
+      if(!usuarioActual.esAdmin) enviarNotificacion(esEdicion?'editó':'agregó', obj, p.nombre);
       closeModal('modal-plan');
       ['p-ter','p-obj'].forEach(i=>document.getElementById(i).value='');
       document.getElementById('p-sesiones').value='';
@@ -2111,10 +2140,11 @@ function guardarPlan(){
 }
 
 function editarObjetivoPlan(idx){
-  if(!usuarioActual?.esAdmin){toast('Solo el administrador puede editar el plan','err');return;}
+  if(!usuarioActual){return;}
   const pl=arrOf(pacientes[pacienteActivo]?.plan);
   const o=pl[idx];
   if(!o) return;
+  if(!puedeEditarPlan(o)){toast('Solo puedes editar objetivos de tu especialidad','err');return;}
   document.getElementById('p-modal-title').textContent='Editar objetivo terapéutico';
   document.getElementById('p-edit-idx').value=idx;
   document.getElementById('p-tipo').value=o.tipo||'';
@@ -2128,17 +2158,52 @@ function editarObjetivoPlan(idx){
 }
 
 function eliminarObjetivoPlan(idx){
-  if(!usuarioActual?.esAdmin){toast('Solo el administrador puede editar el plan','err');return;}
+  if(!usuarioActual){return;}
   const pl=arrOf(pacientes[pacienteActivo]?.plan);
   const o=pl[idx];
   if(!o) return;
+  if(!puedeEditarPlan(o)){toast('Solo puedes eliminar objetivos de tu especialidad','err');return;}
   if(!confirm(`¿Eliminar el objetivo "${o.objetivo.substring(0,60)}${o.objetivo.length>60?'...':''}"?\nEsta acción no se puede deshacer.`)) return;
+  const p=pacientes[pacienteActivo];
   pl.splice(idx,1);
-  // Re-numerar
   pl.forEach((x,i)=>x.n=i+1);
   DB.child(`pacientes/${pacienteActivo}/plan`).set(pl)
-    .then(()=>{toast('Objetivo eliminado');renderPlan();})
+    .then(()=>{
+      toast('Objetivo eliminado');
+      if(!usuarioActual.esAdmin) enviarNotificacion('eliminó', o.objetivo, p.nombre);
+      renderPlan();
+    })
     .catch(()=>toast('Error al eliminar','err'));
+}
+
+// ── HELPERS TERAPEUTA ─────────────────────────────────────────────
+function getMiTipoEnPaciente(pacId){
+  if(usuarioActual?.esAdmin) return null;
+  const equipo=leerEquipoLimpio(pacId||pacienteActivo);
+  const entrada=Object.values(equipo).find(e=>e.email&&e.email.toLowerCase()===usuarioActual.email.toLowerCase());
+  return entrada?.tipo||null;
+}
+
+function puedeEditarPlan(obj){
+  if(usuarioActual?.esAdmin) return true;
+  const miTipo=getMiTipoEnPaciente();
+  if(!miTipo) return false;
+  // Puede editar objetivos de su propia especialidad
+  return !obj || obj.tipo===miTipo;
+}
+
+function enviarNotificacion(accion, objetivo, pacienteNombre){
+  const notif={
+    ts:Date.now(),
+    fecha:new Date().toLocaleDateString('es-PE'),
+    hora:new Date().toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'}),
+    terapeuta:usuarioActual.email,
+    accion, // 'agregó','editó','eliminó'
+    objetivo:objetivo.substring(0,80)+(objetivo.length>80?'...':''),
+    paciente:pacienteNombre,
+    leida:false
+  };
+  DB.child('notificaciones').push(notif);
 }
 
 function leerEquipoLimpio(pacId){
@@ -2552,6 +2617,73 @@ ${hit.length?`<h2>Hitos del mes</h2>${hit.map(h=>`<div class="hito"><strong>${h.
   const win=window.open('','_blank');
   if(win){ win.document.write(html); win.document.close(); }
   else toast('Permite las ventanas emergentes para exportar PDF','err');
+}
+
+// ── NOTIFICACIONES ────────────────────────────────────────────────
+let _notifRef = null;
+function escucharNotificaciones(){
+  if(_notifRef) return;
+  _notifRef = DB.child('notificaciones');
+  _notifRef.on('value', snap=>{
+    const data = snap.val()||{};
+    const todas = Object.entries(data).map(([k,v])=>({key:k,...v}));
+    const noLeidas = todas.filter(n=>!n.leida);
+    const badge = document.getElementById('notif-badge');
+    if(badge){
+      if(noLeidas.length>0){
+        badge.textContent = noLeidas.length > 9 ? '9+' : noLeidas.length;
+        badge.style.display='flex';
+      } else {
+        badge.style.display='none';
+      }
+    }
+  });
+}
+
+function abrirNotificaciones(){
+  const lista = document.getElementById('notif-lista');
+  lista.innerHTML = '<div style="font-size:12px;color:var(--text3);text-align:center;padding:10px">Cargando...</div>';
+  openModal('modal-notif');
+  DB.child('notificaciones').orderByChild('ts').once('value', snap=>{
+    const data = snap.val()||{};
+    const todas = Object.entries(data)
+      .map(([k,v])=>({key:k,...v}))
+      .sort((a,b)=>b.ts-a.ts); // más recientes primero
+    if(!todas.length){
+      lista.innerHTML='<div class="empty-state"><div class="empty-icon">🔔</div><div class="empty-text">Sin notificaciones aún</div></div>';
+      return;
+    }
+    lista.innerHTML = todas.map(n=>{
+      const iconAccion = n.accion==='agregó'?'➕':n.accion==='editó'?'✏️':'🗑️';
+      const colorBorder = n.leida ? 'rgba(255,255,255,.07)' : 'rgba(167,139,250,.3)';
+      const bgCard = n.leida ? 'rgba(255,255,255,.04)' : 'rgba(167,139,250,.07)';
+      return `<div style="background:${bgCard};border:1px solid ${colorBorder};border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+          <div style="font-size:13px">${iconAccion} <strong style="color:var(--text)">${n.terapeuta}</strong></div>
+          <div style="font-size:10px;color:var(--text3);flex-shrink:0">${n.fecha} ${n.hora}</div>
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">
+          <strong>${n.accion}</strong> un objetivo en <strong style="color:#a78bfa">${n.paciente}</strong>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px;font-style:italic">"${n.objetivo}"</div>
+        ${!n.leida?`<div style="margin-top:6px"><span style="font-size:10px;background:rgba(167,139,250,.2);color:#c4b5fd;padding:2px 8px;border-radius:20px;font-weight:600">Nueva</span></div>`:''}
+      </div>`;
+    }).join('');
+    // Marcar todas como leídas al abrir
+    todas.filter(n=>!n.leida).forEach(n=>{
+      DB.child(`notificaciones/${n.key}/leida`).set(true);
+    });
+  });
+}
+
+function marcarTodasLeidas(){
+  DB.child('notificaciones').once('value', snap=>{
+    const data = snap.val()||{};
+    Object.keys(data).forEach(k=>{
+      DB.child(`notificaciones/${k}/leida`).set(true);
+    });
+    toast('Notificaciones marcadas como leídas');
+  });
 }
 
 // ── Cerrar modales ────────────────────────────────────────────────
