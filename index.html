@@ -466,6 +466,7 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
       <span class="sync-badge sync-ok" id="badge-sync">En línea</span>
       <button class="btn-icon" id="btn-add-pac" onclick="abrirNuevoPaciente()" title="Nuevo paciente" style="display: flex;">+</button>
       <button class="btn-icon" id="btn-directorio" onclick="showScreen('screen-directorio');renderDirectorio()" title="Directorio de terapeutas" style="display: flex; font-size: 13px;">👥</button>
+      <button class="btn-icon" id="btn-usuarios" onclick="showScreen('screen-usuarios');renderUsuarios()" title="Gestión de usuarios" style="display:none;font-size:13px">👤</button>
       <button class="btn-icon" id="btn-notif" onclick="abrirNotificaciones()" title="Notificaciones" style="display:none;font-size:13px;position:relative">🔔<span id="notif-badge" style="position:absolute;top:-3px;right:-3px;background:#f87171;color:white;font-size:9px;font-weight:700;border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center;line-height:16px"></span></button>
       <button class="btn-icon" onclick="doLogout()" title="Cerrar sesión" style="font-size:13px">⏻</button>
     </div>
@@ -662,6 +663,68 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
   </div>
   <div class="scroll-area" id="lista-directorio">
     <div class="empty-state"><div class="empty-icon">👥</div><div class="empty-text">Sin terapeutas registrados</div></div>
+  </div>
+</div>
+
+<!-- Screen Usuarios -->
+<div class="screen" id="screen-usuarios">
+  <div class="top-bar">
+    <button class="btn-back" onclick="showScreen('screen-pacientes')" style="width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0">‹</button>
+    <div style="flex:1;margin-left:10px">
+      <div class="top-logo">CIT<span>-</span>NIÑOS FELICES</div>
+      <div class="top-user">Gestión de usuarios</div>
+    </div>
+    <button class="btn-icon" onclick="abrirNuevoUsuario()" title="Agregar usuario" style="font-size:16px">+</button>
+  </div>
+  <div class="scroll-area" id="lista-usuarios">
+    <div class="empty-state"><div class="empty-icon">👤</div><div class="empty-text">Cargando usuarios...</div></div>
+  </div>
+</div>
+
+<!-- Modal nuevo/editar usuario -->
+<div class="modal-bg" id="modal-usuario">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="usr-modal-title">Nuevo usuario</div>
+    <input type="hidden" id="usr-edit-uid" value="">
+    <div class="fg">
+      <label>Nombre completo</label>
+      <input id="usr-nombre" type="text" placeholder="Lic. Nombre Apellido">
+    </div>
+    <div class="fg">
+      <label>Correo electrónico</label>
+      <input id="usr-email" type="email" placeholder="correo@ejemplo.com" id="usr-email">
+    </div>
+    <div class="fg" id="usr-pass-wrap">
+      <label>Contraseña</label>
+      <input id="usr-pass" type="password" placeholder="Mínimo 6 caracteres">
+    </div>
+    <div class="fg">
+      <label>Rol</label>
+      <select id="usr-rol">
+        <option value="terapeuta">Terapeuta</option>
+        <option value="admin">Administrador</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Especialidad (si es terapeuta)</label>
+      <select id="usr-tipo">
+        <option value="">— Ninguna / Admin —</option>
+        <option>Terapia de Lenguaje</option>
+        <option>Terapia Conductual (ABA)</option>
+        <option>Terapia Ocupacional</option>
+        <option>Terapia de Integración Sensorial</option>
+        <option>Psicomotricidad</option>
+        <option>Terapia de Juego</option>
+        <option>Musicoterapia</option>
+        <option>Fonoaudiología</option>
+        <option>Terapia Familiar</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('modal-usuario')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarUsuario()">Guardar</button>
+    </div>
   </div>
 </div>
 
@@ -1032,22 +1095,29 @@ const toast = (msg,tipo='ok') => {
 // ── Auth ──────────────────────────────────────────────────────────
 auth.onAuthStateChanged(user => {
   if(user){
-    const esAdmin = ADMINS.includes(user.email.toLowerCase());
-    usuarioActual = { uid:user.uid, email:user.email, nombre:user.email.split('@')[0], esAdmin };
-    document.getElementById('top-user-name').textContent = user.email + (esAdmin?' · Admin':'· Terapeuta');
-    // Mostrar botón nuevo paciente solo a admin
-    document.getElementById('btn-add-pac').style.display = esAdmin?'flex':'none';
-    document.getElementById('fab-lista').style.display   = esAdmin?'flex':'none';
-    document.getElementById('btn-directorio').style.display = esAdmin?'flex':'none';
-    // Campana de notificaciones solo para admin
-    document.getElementById('btn-notif').style.display = esAdmin?'flex':'none';
-    if(esAdmin) escucharNotificaciones();
-    // Pestañas solo para admin
-    document.querySelectorAll('.tab-admin-only').forEach(t=>{
-      t.style.display = esAdmin ? '' : 'none';
+    // Verificar rol: primero lista hardcoded, luego DB
+    DB.child(`admins/${user.email.toLowerCase().replace(/\./g,'_')}`).once('value', snapAdmin=>{
+      const esAdminDB = snapAdmin.exists();
+      const esAdmin = ADMINS.includes(user.email.toLowerCase()) || esAdminDB;
+      // Obtener nombre desde DB si existe
+      DB.child(`usuarios`).orderByChild('email').equalTo(user.email.toLowerCase()).once('value', snapUsr=>{
+        const usrData = snapUsr.val();
+        const nombre = usrData ? Object.values(usrData)[0]?.nombre || user.email.split('@')[0] : user.email.split('@')[0];
+        usuarioActual = { uid:user.uid, email:user.email, nombre, esAdmin };
+        document.getElementById('top-user-name').textContent = nombre + (esAdmin?' · Admin':' · Terapeuta');
+        document.getElementById('btn-add-pac').style.display = esAdmin?'flex':'none';
+        document.getElementById('fab-lista').style.display   = esAdmin?'flex':'none';
+        document.getElementById('btn-directorio').style.display = esAdmin?'flex':'none';
+        document.getElementById('btn-notif').style.display = esAdmin?'flex':'none';
+        if(esAdmin) escucharNotificaciones();
+        document.getElementById('btn-usuarios').style.display = esAdmin?'flex':'none';
+        document.querySelectorAll('.tab-admin-only').forEach(t=>{
+          t.style.display = esAdmin ? '' : 'none';
+        });
+        showScreen('screen-pacientes');
+        iniciarSync();
+      });
     });
-    showScreen('screen-pacientes');
-    iniciarSync();
   } else {
     usuarioActual = null;
     showScreen('screen-login');
@@ -2776,6 +2846,152 @@ function renderCalendario(){
       <div style="display:flex;flex-wrap:wrap;gap:10px 16px">${leyenda||'<span style="font-size:11px;color:var(--text3)">Sin sesiones</span>'}</div>
     </div>
     ${calendarios||'<div class="card"><div class="empty-state"><div class="empty-icon">📅</div><div class="empty-text">Sin sesiones registradas aún</div></div></div>'}`;
+}
+
+// ── GESTIÓN DE USUARIOS ───────────────────────────────────────────
+function renderUsuarios(){
+  if(!usuarioActual?.esAdmin) return;
+  const cont = document.getElementById('lista-usuarios');
+  cont.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-text">Cargando...</div></div>';
+  DB.child('usuarios').once('value', snap=>{
+    const data = snap.val()||{};
+    const lista = Object.entries(data).map(([uid,u])=>({uid,...u}));
+    if(!lista.length){
+      cont.innerHTML='<div class="empty-state"><div class="empty-icon">👤</div><div class="empty-text">Sin usuarios registrados aún</div></div>';
+      return;
+    }
+    const admins = lista.filter(u=>u.rol==='admin');
+    const terapeutas = lista.filter(u=>u.rol!=='admin');
+    const renderCard = u => {
+      const isAdmin = u.rol==='admin';
+      const bg = isAdmin ? 'rgba(251,191,36,.15)' : 'rgba(56,189,248,.15)';
+      const col = isAdmin ? '#fbbf24' : '#7dd3fc';
+      const ini2 = (u.nombre||u.email||'?').split(' ').filter(w=>w.length>1).slice(0,2).map(w=>w[0].toUpperCase()).join('');
+      return `<div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px">
+        <div style="width:40px;height:40px;border-radius:50%;background:${bg};color:${col};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0">${ini2}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600;color:var(--text)">${u.nombre||u.email}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:1px">${u.email}</div>
+          ${u.tipo?`<div style="font-size:10px;color:${col};margin-top:2px">📋 ${u.tipo}</div>`:''}
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+          <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:${bg};color:${col}">${isAdmin?'Admin':'Terapeuta'}</span>
+          <div style="display:flex;gap:4px">
+            <button class="btn-edit" onclick="editarUsuario('${u.uid}')" style="font-size:10px;padding:3px 8px">✏️</button>
+            ${u.email!==usuarioActual.email?`<button class="btn-del" onclick="eliminarUsuario('${u.uid}','${u.email}')" style="font-size:10px;padding:3px 8px">🗑</button>`:''}
+          </div>
+        </div>
+      </div>`;
+    };
+    cont.innerHTML =
+      (admins.length?`<div class="section-label" style="padding:0 2px">Administradores (${admins.length})</div>${admins.map(renderCard).join('')}`:'') +
+      (terapeutas.length?`<div class="section-label" style="padding:0 2px;margin-top:8px">Terapeutas (${terapeutas.length})</div>${terapeutas.map(renderCard).join('')}`:'');
+  });
+}
+
+function abrirNuevoUsuario(){
+  document.getElementById('usr-modal-title').textContent='Nuevo usuario';
+  document.getElementById('usr-edit-uid').value='';
+  document.getElementById('usr-nombre').value='';
+  document.getElementById('usr-email').value='';
+  document.getElementById('usr-pass').value='';
+  document.getElementById('usr-rol').value='terapeuta';
+  document.getElementById('usr-tipo').value='';
+  document.getElementById('usr-pass-wrap').style.display='block';
+  openModal('modal-usuario');
+}
+
+function editarUsuario(uid){
+  DB.child(`usuarios/${uid}`).once('value', snap=>{
+    const u=snap.val();
+    if(!u) return;
+    document.getElementById('usr-modal-title').textContent='Editar usuario';
+    document.getElementById('usr-edit-uid').value=uid;
+    document.getElementById('usr-nombre').value=u.nombre||'';
+    document.getElementById('usr-email').value=u.email||'';
+    document.getElementById('usr-pass').value='';
+    document.getElementById('usr-rol').value=u.rol||'terapeuta';
+    document.getElementById('usr-tipo').value=u.tipo||'';
+    // En edición no mostramos campo contraseña (se cambia desde Firebase)
+    document.getElementById('usr-pass-wrap').style.display='none';
+    openModal('modal-usuario');
+  });
+}
+
+function guardarUsuario(){
+  const uid     = document.getElementById('usr-edit-uid').value;
+  const nombre  = document.getElementById('usr-nombre').value.trim();
+  const email   = document.getElementById('usr-email').value.trim().toLowerCase();
+  const pass    = document.getElementById('usr-pass').value;
+  const rol     = document.getElementById('usr-rol').value;
+  const tipo    = document.getElementById('usr-tipo').value;
+  const esEdicion = !!uid;
+
+  if(!nombre||!email){alert('Nombre y correo son obligatorios.');return;}
+  if(!esEdicion && pass.length<6){alert('La contraseña debe tener al menos 6 caracteres.');return;}
+
+  if(esEdicion){
+    // Solo actualiza datos en DB (no puede cambiar email/pass desde aquí)
+    DB.child(`usuarios/${uid}`).update({nombre,rol,tipo:tipo||null})
+      .then(()=>{
+        // Si cambió a admin, agregarlo a ADMINS en DB
+        if(rol==='admin') DB.child(`admins/${email.replace(/\./g,'_')}`).set(true);
+        else DB.child(`admins/${email.replace(/\./g,'_')}`).remove();
+        toast('Usuario actualizado');
+        closeModal('modal-usuario');
+        renderUsuarios();
+      }).catch(()=>toast('Error al actualizar','err'));
+  } else {
+    // Crear usuario nuevo con Firebase Auth via API REST
+    const apiKey = firebase_config_key();
+    if(!apiKey){toast('No se pudo obtener la clave de Firebase','err');return;}
+    toast('Creando usuario...');
+    fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password:pass,returnSecureToken:true})
+    })
+    .then(r=>r.json())
+    .then(data=>{
+      if(data.error) throw new Error(data.error.message);
+      const newUid = data.localId;
+      return DB.child(`usuarios/${newUid}`).set({
+        uid:newUid, nombre, email, rol,
+        tipo:tipo||null,
+        creadoPor:usuarioActual.email,
+        ts:Date.now()
+      }).then(()=>{
+        if(rol==='admin') return DB.child(`admins/${email.replace(/\./g,'_')}`).set(true);
+      }).then(()=>newUid);
+    })
+    .then(()=>{
+      toast('Usuario creado con éxito ✅');
+      closeModal('modal-usuario');
+      renderUsuarios();
+    })
+    .catch(e=>{
+      const msg = e.message==='EMAIL_EXISTS'?'Este correo ya está registrado':
+                  e.message==='WEAK_PASSWORD : Password should be at least 6 characters'?'Contraseña muy corta':
+                  e.message||'Error al crear usuario';
+      toast(msg,'err');
+    });
+  }
+}
+
+function eliminarUsuario(uid, email){
+  if(!confirm(`¿Eliminar el usuario ${email}?\nSe eliminará su acceso a la app.`)) return;
+  DB.child(`usuarios/${uid}`).remove()
+    .then(()=>{
+      DB.child(`admins/${email.replace(/\./g,'_')}`).remove();
+      toast('Usuario eliminado');
+      renderUsuarios();
+    }).catch(()=>toast('Error al eliminar','err'));
+}
+
+function firebase_config_key(){
+  // Extrae la apiKey de la config de Firebase ya inicializado
+  try{ return firebase.app().options.apiKey; }
+  catch(e){ return null; }
 }
 
 function escucharNotificaciones(){
