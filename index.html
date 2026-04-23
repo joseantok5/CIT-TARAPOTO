@@ -795,11 +795,9 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
     <div class="fg"><label>Diagnóstico principal</label><input id="np-dx" type="text" placeholder="TEA — F84.0 (CIE-11)"></div>
     <div class="form-row">
       <div class="fg"><label>Diagnósticos secundarios</label><input id="np-dx2" type="text" placeholder="Ej: TDAH, Ansiedad..."></div>
-      <div class="fg"><label>Nivel TEA</label><select id="np-nivel-dx"><option value="">Seleccionar</option><option>Nivel 1</option><option>Nivel 2</option><option>Nivel 3</option></select></div>
     </div>
     <div class="form-row">
       <div class="fg"><label>Fecha de diagnóstico</label><input id="np-fecha-dx" type="date"></div>
-      <div class="fg"><label>Instrumento Dx</label><input id="np-instrumento-dx" type="text" placeholder="ADOS-2, DSM-5..."></div>
     </div>
     <div class="form-row">
       <div class="fg"><label>Especialista que diagnostica</label><input id="np-especialista-dx" type="text"></div>
@@ -812,12 +810,6 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
     </div>
     <div class="fg"><label>Grupo sanguíneo</label><select id="np-sangre"><option value="">—</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
 
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(167,139,250,.7);margin:14px 0 8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)">Evaluación inicial Denver</div>
-    <div class="form-row">
-      <div class="fg"><label>Fecha de evaluación</label><input id="np-fecha-eval" type="date"></div>
-      <div class="fg"><label>Puntaje global</label><input id="np-puntaje-global" type="text" placeholder="Ej: 2.4"></div>
-    </div>
-    <div class="fg"><label>Nivel funcional</label><input id="np-nivel-func" type="text" placeholder="Ej: Nivel bajo-medio"></div>
 
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(167,139,250,.7);margin:14px 0 8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)">Antecedentes clínicos y familiares</div>
     <div class="fg"><label>Antecedentes perinatales</label><textarea id="np-perinatales" placeholder="Parto a término/pretérmino, tipo de parto, hipoxia neonatal, APGAR..."></textarea></div>
@@ -1475,14 +1467,12 @@ function renderPerfil(){
       <div class="kv-row"><div class="kv-key">Diagnóstico</div><div class="kv-val">${p.dx||'—'}</div></div>
       ${p.dx2?`<div class="kv-row"><div class="kv-key">Dx. secundario</div><div class="kv-val">${p.dx2}</div></div>`:''}
       ${p.fechaDx?`<div class="kv-row"><div class="kv-key">Fecha Dx</div><div class="kv-val">${p.fechaDx}</div></div>`:''}
-      ${p.instrumentoDx?`<div class="kv-row"><div class="kv-key">Instrumento Dx</div><div class="kv-val">${p.instrumentoDx}</div></div>`:''}
       ${p.especialistaDx?`<div class="kv-row"><div class="kv-key">Especialista</div><div class="kv-val">${p.especialistaDx}${p.especialidadDx?' · '+p.especialidadDx:''}</div></div>`:''}
       ${p.instDx?`<div class="kv-row"><div class="kv-key">Institución Dx</div><div class="kv-val">${p.instDx}</div></div>`:''}
       ${p.medicacion?`<div class="kv-row"><div class="kv-key">Medicación</div><div class="kv-val">${p.medicacion}</div></div>`:''}
       ${p.alergias?`<div class="kv-row"><div class="kv-key">Alergias</div><div class="kv-val">${p.alergias}</div></div>`:''}
       ${p.grupoSanguineo?`<div class="kv-row"><div class="kv-key">Grupo sanguíneo</div><div class="kv-val">${p.grupoSanguineo}</div></div>`:''}
       <div class="kv-row"><div class="kv-key">Institución</div><div class="kv-val">${p.institucion||'—'}${p.grado?' · '+p.grado:''}</div></div>
-      ${p.fechaEval?`<div class="kv-row"><div class="kv-key">Eval. Denver</div><div class="kv-val">${p.fechaEval}${p.puntajeGlobal?' · Puntaje: '+p.puntajeGlobal:''}${p.nivelFunc?' · '+p.nivelFunc:''}</div></div>`:''}
       ${p.perinatales?`</div><div class="card"><div class="card-title">Antecedentes clínicos</div><div class="kv-row"><div class="kv-key">Perinatales</div><div class="kv-val">${p.perinatales}</div></div>`:''}
       ${p.psicomotor?`<div class="kv-row"><div class="kv-key">Psicomotor</div><div class="kv-val">${p.psicomotor}</div></div>`:''}
       ${p.histLenguaje?`<div class="kv-row"><div class="kv-key">Lenguaje</div><div class="kv-val">${p.histLenguaje}</div></div>`:''}
@@ -2067,15 +2057,11 @@ function abrirEditarPaciente(id){
   // Nuevos campos diagnóstico
   document.getElementById('np-dx2').value = p.dx2||'';
   document.getElementById('np-fecha-dx').value = p.fechaDx||'';
-  document.getElementById('np-instrumento-dx').value = p.instrumentoDx||'';
   document.getElementById('np-especialista-dx').value = p.especialistaDx||'';
   document.getElementById('np-especialidad-dx').value = p.especialidadDx||'';
   document.getElementById('np-inst-dx').value = p.instDx||'';
   document.getElementById('np-medicacion').value = p.medicacion||'';
   document.getElementById('np-alergias').value = p.alergias||'';
-  document.getElementById('np-fecha-eval').value = p.fechaEval||'';
-  document.getElementById('np-puntaje-global').value = p.puntajeGlobal||'';
-  document.getElementById('np-nivel-func').value = p.nivelFunc||'';
   // Antecedentes
   document.getElementById('np-perinatales').value = p.perinatales||'';
   document.getElementById('np-psicomotor').value = p.psicomotor||'';
@@ -2101,8 +2087,6 @@ function abrirEditarPaciente(id){
   for(let i=0;i<genSel.options.length;i++){ if(genSel.options[i].value===p.genero){ genSel.selectedIndex=i; break; } }
   const nivSel = document.getElementById('np-nivel');
   for(let i=0;i<nivSel.options.length;i++){ if(nivSel.options[i].value===p.nivelTea){ nivSel.selectedIndex=i; break; } }
-  const nivDxSel = document.getElementById('np-nivel-dx');
-  for(let i=0;i<nivDxSel.options.length;i++){ if(nivDxSel.options[i].value===p.nivelDx){ nivDxSel.selectedIndex=i; break; } }
   const sangreSel = document.getElementById('np-sangre');
   for(let i=0;i<sangreSel.options.length;i++){ if(sangreSel.options[i].value===p.grupoSanguineo){ sangreSel.selectedIndex=i; break; } }
   const estSel = document.getElementById('np-estado');
@@ -2149,18 +2133,13 @@ function guardarNuevoPaciente(){
     grado:      document.getElementById('np-grado').value,
     // Diagnóstico y evaluación
     dx2:            document.getElementById('np-dx2').value,
-    nivelDx:        document.getElementById('np-nivel-dx').value,
     fechaDx:        document.getElementById('np-fecha-dx').value,
-    instrumentoDx:  document.getElementById('np-instrumento-dx').value,
     especialistaDx: document.getElementById('np-especialista-dx').value,
     especialidadDx: document.getElementById('np-especialidad-dx').value,
     instDx:         document.getElementById('np-inst-dx').value,
     medicacion:     document.getElementById('np-medicacion').value,
     alergias:       document.getElementById('np-alergias').value,
     grupoSanguineo: document.getElementById('np-sangre').value,
-    fechaEval:      document.getElementById('np-fecha-eval').value,
-    puntajeGlobal:  document.getElementById('np-puntaje-global').value,
-    nivelFunc:      document.getElementById('np-nivel-func').value,
     // Antecedentes
     perinatales:    document.getElementById('np-perinatales').value,
     psicomotor:     document.getElementById('np-psicomotor').value,
@@ -2186,15 +2165,15 @@ function guardarNuevoPaciente(){
 
   const resetModal = () => {
     ['np-nombre','np-hc','np-dx','np-dx2','np-inst','np-grado',
-     'np-inst-dx','np-especialista-dx','np-especialidad-dx','np-instrumento-dx',
-     'np-medicacion','np-alergias','np-puntaje-global','np-nivel-func',
+     'np-inst-dx','np-especialista-dx','np-especialidad-dx',
+     'np-medicacion','np-alergias',
      'np-perinatales','np-psicomotor','np-lenguaje','np-antec-fam','np-interv-prev','np-obs-ingreso',
      'np-tutor1-nombre','np-tutor1-vinculo','np-tutor1-tel','np-tutor1-email',
      'np-tutor2-nombre','np-tutor2-vinculo','np-tutor2-tel','np-tutor2-email',
      'np-emerg-nombre','np-emerg-vinculo','np-emerg-tel','np-emerg-obs'
     ].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=''; });
-    ['np-fnac','np-fecha-dx','np-fecha-eval'].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=''; });
-    ['np-genero','np-nivel','np-nivel-dx','np-sangre'].forEach(i=>{ const el=document.getElementById(i); if(el) el.selectedIndex=0; });
+    ['np-fnac','np-fecha-dx'].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=''; });
+    ['np-genero','np-nivel','np-sangre'].forEach(i=>{ const el=document.getElementById(i); if(el) el.selectedIndex=0; });
     document.getElementById('np-foto-preview').innerHTML='📷';
     document.getElementById('np-foto-input').value='';
     document.getElementById('np-foto-progress').style.display='none';
