@@ -2155,11 +2155,24 @@ function guardarPlan(){
     ts:Date.now()
   };
   const esEdicion=editIdx>=0&&editIdx<pl.length;
+  const objAnterior = esEdicion ? pl[editIdx].objetivo : null;
   if(esEdicion){entrada.n=pl[editIdx].n;pl[editIdx]=entrada;}
   else{entrada.n=pl.length+1;pl.push(entrada);}
-  DB.child(`pacientes/${pacienteActivo}/plan`).set(pl)
+
+  // Si se editó el texto del objetivo, actualizar las sesiones que lo tenían
+  const ses=arrOf(p.sesiones);
+  const sesActualizadas = (esEdicion && objAnterior && objAnterior!==obj)
+    ? ses.map(s=>s.objetivoTrabajado===objAnterior ? {...s, objetivoTrabajado:obj} : s)
+    : ses;
+
+  const promesas=[DB.child(`pacientes/${pacienteActivo}/plan`).set(pl)];
+  if(esEdicion && objAnterior && objAnterior!==obj){
+    promesas.push(DB.child(`pacientes/${pacienteActivo}/sesiones`).set(sesActualizadas));
+  }
+
+  Promise.all(promesas)
     .then(()=>{
-      toast(esEdicion?'Objetivo actualizado':'Objetivo guardado');
+      toast(esEdicion?'Objetivo y sesiones actualizados':'Objetivo guardado');
       if(!usuarioActual.esAdmin) enviarNotificacion(esEdicion?'editó':'agregó', obj, p.nombre);
       closeModal('modal-plan');
       ['p-ter','p-obj'].forEach(i=>document.getElementById(i).value='');
@@ -2194,13 +2207,31 @@ function eliminarObjetivoPlan(idx){
   const o=pl[idx];
   if(!o) return;
   if(!puedeEditarPlan(o)){toast('Solo puedes eliminar objetivos de tu especialidad','err');return;}
-  if(!confirm(`¿Eliminar el objetivo "${o.objetivo.substring(0,60)}${o.objetivo.length>60?'...':''}"?\nEsta acción no se puede deshacer.`)) return;
   const p=pacientes[pacienteActivo];
+  const sesRelacionadas=arrOf(p.sesiones).filter(s=>s.objetivoTrabajado===o.objetivo).length;
+  const msg=sesRelacionadas>0
+    ? `¿Eliminar el objetivo "${o.objetivo.substring(0,50)}${o.objetivo.length>50?'...':''}"?\n\n⚠️ También se eliminarán ${sesRelacionadas} sesión${sesRelacionadas!==1?'es':''} vinculada${sesRelacionadas!==1?'s':''} a este objetivo.\n\nEsta acción no se puede deshacer.`
+    : `¿Eliminar el objetivo "${o.objetivo.substring(0,60)}${o.objetivo.length>60?'...':''}"?\nEsta acción no se puede deshacer.`;
+  if(!confirm(msg)) return;
+
+  // Eliminar sesiones vinculadas al objetivo
+  const sesRestantes=arrOf(p.sesiones).filter(s=>s.objetivoTrabajado!==o.objetivo);
+  // Re-numerar sesiones
+  sesRestantes.forEach((s,i)=>s.n=i+1);
+
+  // Actualizar plan
   pl.splice(idx,1);
   pl.forEach((x,i)=>x.n=i+1);
-  DB.child(`pacientes/${pacienteActivo}/plan`).set(pl)
+
+  Promise.all([
+    DB.child(`pacientes/${pacienteActivo}/plan`).set(pl),
+    DB.child(`pacientes/${pacienteActivo}/sesiones`).set(sesRestantes.length ? sesRestantes : null)
+  ])
     .then(()=>{
-      toast('Objetivo eliminado');
+      const msg2 = sesRelacionadas>0
+        ? `Objetivo eliminado junto con ${sesRelacionadas} sesión${sesRelacionadas!==1?'es':''}`
+        : 'Objetivo eliminado';
+      toast(msg2);
       if(!usuarioActual.esAdmin) enviarNotificacion('eliminó', o.objetivo, p.nombre);
       renderPlan();
     })
