@@ -793,6 +793,66 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
       <div class="fg"><label>Grado</label><input id="np-grado" type="text" placeholder="4°"></div>
     </div>
     <div class="fg"><label>Diagnóstico principal</label><input id="np-dx" type="text" placeholder="TEA — F84.0 (CIE-11)"></div>
+    <div class="form-row">
+      <div class="fg"><label>Diagnósticos secundarios</label><input id="np-dx2" type="text" placeholder="Ej: TDAH, Ansiedad..."></div>
+      <div class="fg"><label>Nivel TEA</label><select id="np-nivel-dx"><option value="">Seleccionar</option><option>Nivel 1</option><option>Nivel 2</option><option>Nivel 3</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Fecha de diagnóstico</label><input id="np-fecha-dx" type="date"></div>
+      <div class="fg"><label>Instrumento Dx</label><input id="np-instrumento-dx" type="text" placeholder="ADOS-2, DSM-5..."></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Especialista que diagnostica</label><input id="np-especialista-dx" type="text"></div>
+      <div class="fg"><label>Especialidad</label><input id="np-especialidad-dx" type="text" placeholder="Neuropediatra..."></div>
+    </div>
+    <div class="fg"><label>Institución del diagnóstico</label><input id="np-inst-dx" type="text"></div>
+    <div class="form-row">
+      <div class="fg"><label>Medicación actual</label><input id="np-medicacion" type="text" placeholder="Risperidona, Melatonina..."></div>
+      <div class="fg"><label>Alergias</label><input id="np-alergias" type="text"></div>
+    </div>
+    <div class="fg"><label>Grupo sanguíneo</label><select id="np-sangre"><option value="">—</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(167,139,250,.7);margin:14px 0 8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)">Evaluación inicial Denver</div>
+    <div class="form-row">
+      <div class="fg"><label>Fecha de evaluación</label><input id="np-fecha-eval" type="date"></div>
+      <div class="fg"><label>Puntaje global</label><input id="np-puntaje-global" type="text" placeholder="Ej: 2.4"></div>
+    </div>
+    <div class="fg"><label>Nivel funcional</label><input id="np-nivel-func" type="text" placeholder="Ej: Nivel bajo-medio"></div>
+
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(167,139,250,.7);margin:14px 0 8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)">Antecedentes clínicos y familiares</div>
+    <div class="fg"><label>Antecedentes perinatales</label><textarea id="np-perinatales" placeholder="Parto a término/pretérmino, tipo de parto, hipoxia neonatal, APGAR..."></textarea></div>
+    <div class="fg"><label>Desarrollo psicomotor</label><textarea id="np-psicomotor" placeholder="Edad de gateo, marcha independiente, primeras palabras, control de esfínteres..."></textarea></div>
+    <div class="fg"><label>Historia del lenguaje</label><textarea id="np-lenguaje" placeholder="Edad de balbuceo, primeras palabras, regresión del lenguaje..."></textarea></div>
+    <div class="fg"><label>Antecedentes familiares</label><textarea id="np-antec-fam" placeholder="Diagnósticos de TEA, TDAH u otros TND en familiares de primer o segundo grado..."></textarea></div>
+    <div class="fg"><label>Intervenciones previas</label><textarea id="np-interv-prev" placeholder="Terapias anteriores, duración y resultados: fonoaudiología, TO, ABA..."></textarea></div>
+    <div class="fg"><label>Observaciones clínicas de ingreso</label><textarea id="np-obs-ingreso" placeholder="Perfil de entrada: fortalezas observadas, áreas de mayor impacto, preferencias y motivadores del niño..."></textarea></div>
+
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(167,139,250,.7);margin:14px 0 8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)">Datos familiares y contacto</div>
+    <div class="form-row">
+      <div class="fg"><label>Padre / Tutor 1</label><input id="np-tutor1-nombre" type="text"></div>
+      <div class="fg"><label>Vínculo</label><input id="np-tutor1-vinculo" type="text" placeholder="Padre, Madre..."></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Teléfono</label><input id="np-tutor1-tel" type="tel"></div>
+      <div class="fg"><label>Correo electrónico</label><input id="np-tutor1-email" type="email"></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Madre / Tutora 2</label><input id="np-tutor2-nombre" type="text"></div>
+      <div class="fg"><label>Vínculo</label><input id="np-tutor2-vinculo" type="text"></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Teléfono</label><input id="np-tutor2-tel" type="tel"></div>
+      <div class="fg"><label>Correo electrónico</label><input id="np-tutor2-email" type="email"></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Contacto de emergencia</label><input id="np-emerg-nombre" type="text"></div>
+      <div class="fg"><label>Vínculo</label><input id="np-emerg-vinculo" type="text"></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Teléfono emergencia</label><input id="np-emerg-tel" type="tel"></div>
+      <div class="fg"><label>Observación</label><input id="np-emerg-obs" type="text"></div>
+    </div>
+
     <div class="fg" id="np-estado-wrap" style="display:none">
       <label>Estado del paciente</label>
       <select id="np-estado">
@@ -1413,7 +1473,27 @@ function renderPerfil(){
       <div class="kv-row"><div class="kv-key">Género</div><div class="kv-val">${p.genero||'—'}</div></div>
       <div class="kv-row"><div class="kv-key">Nivel TEA</div><div class="kv-val">${p.nivelTea||'—'}</div></div>
       <div class="kv-row"><div class="kv-key">Diagnóstico</div><div class="kv-val">${p.dx||'—'}</div></div>
+      ${p.dx2?`<div class="kv-row"><div class="kv-key">Dx. secundario</div><div class="kv-val">${p.dx2}</div></div>`:''}
+      ${p.fechaDx?`<div class="kv-row"><div class="kv-key">Fecha Dx</div><div class="kv-val">${p.fechaDx}</div></div>`:''}
+      ${p.instrumentoDx?`<div class="kv-row"><div class="kv-key">Instrumento Dx</div><div class="kv-val">${p.instrumentoDx}</div></div>`:''}
+      ${p.especialistaDx?`<div class="kv-row"><div class="kv-key">Especialista</div><div class="kv-val">${p.especialistaDx}${p.especialidadDx?' · '+p.especialidadDx:''}</div></div>`:''}
+      ${p.instDx?`<div class="kv-row"><div class="kv-key">Institución Dx</div><div class="kv-val">${p.instDx}</div></div>`:''}
+      ${p.medicacion?`<div class="kv-row"><div class="kv-key">Medicación</div><div class="kv-val">${p.medicacion}</div></div>`:''}
+      ${p.alergias?`<div class="kv-row"><div class="kv-key">Alergias</div><div class="kv-val">${p.alergias}</div></div>`:''}
+      ${p.grupoSanguineo?`<div class="kv-row"><div class="kv-key">Grupo sanguíneo</div><div class="kv-val">${p.grupoSanguineo}</div></div>`:''}
       <div class="kv-row"><div class="kv-key">Institución</div><div class="kv-val">${p.institucion||'—'}${p.grado?' · '+p.grado:''}</div></div>
+      ${p.fechaEval?`<div class="kv-row"><div class="kv-key">Eval. Denver</div><div class="kv-val">${p.fechaEval}${p.puntajeGlobal?' · Puntaje: '+p.puntajeGlobal:''}${p.nivelFunc?' · '+p.nivelFunc:''}</div></div>`:''}
+      ${p.perinatales?`</div><div class="card"><div class="card-title">Antecedentes clínicos</div><div class="kv-row"><div class="kv-key">Perinatales</div><div class="kv-val">${p.perinatales}</div></div>`:''}
+      ${p.psicomotor?`<div class="kv-row"><div class="kv-key">Psicomotor</div><div class="kv-val">${p.psicomotor}</div></div>`:''}
+      ${p.histLenguaje?`<div class="kv-row"><div class="kv-key">Lenguaje</div><div class="kv-val">${p.histLenguaje}</div></div>`:''}
+      ${p.antecFam?`<div class="kv-row"><div class="kv-key">Antec. familiar</div><div class="kv-val">${p.antecFam}</div></div>`:''}
+      ${p.intervPrev?`<div class="kv-row"><div class="kv-key">Interv. previas</div><div class="kv-val">${p.intervPrev}</div></div>`:''}
+      ${p.obsIngreso?`<div class="kv-row"><div class="kv-key">Obs. ingreso</div><div class="kv-val">${p.obsIngreso}</div></div>`:''}
+      ${(p.tutor1?.nombre||p.tutor2?.nombre||p.emergencia?.nombre)?`</div><div class="card"><div class="card-title">Datos familiares y contacto</div>
+      ${p.tutor1?.nombre?`<div class="kv-row"><div class="kv-key">${p.tutor1.vinculo||'Tutor 1'}</div><div class="kv-val">${p.tutor1.nombre}${p.tutor1.tel?' · 📞 '+p.tutor1.tel:''}${p.tutor1.email?' · ✉️ '+p.tutor1.email:''}</div></div>`:''}
+      ${p.tutor2?.nombre?`<div class="kv-row"><div class="kv-key">${p.tutor2.vinculo||'Tutor 2'}</div><div class="kv-val">${p.tutor2.nombre}${p.tutor2.tel?' · 📞 '+p.tutor2.tel:''}${p.tutor2.email?' · ✉️ '+p.tutor2.email:''}</div></div>`:''}
+      ${p.emergencia?.nombre?`<div class="kv-row"><div class="kv-key">Emergencia</div><div class="kv-val">${p.emergencia.nombre}${p.emergencia.vinculo?' ('+p.emergencia.vinculo+')':''}${p.emergencia.tel?' · 📞 '+p.emergencia.tel:''}${p.emergencia.obs?' · '+p.emergencia.obs:''}</div></div>`:''}`:''}
+
       <div class="kv-row"><div class="kv-key">Estado</div><div class="kv-val"><span class="p-badge ${(p.estado||'Activo')==='Activo'?'b-activo':(p.estado==='Alta'?'b-alta':'b-suspension')}">${p.estado||'Activo'}</span></div></div>
     </div>
     <div class="card">
@@ -1984,16 +2064,49 @@ function abrirEditarPaciente(id){
   document.getElementById('np-dx').value = p.dx||'';
   document.getElementById('np-inst').value = p.institucion||'';
   document.getElementById('np-grado').value = p.grado||'';
-  // Género
+  // Nuevos campos diagnóstico
+  document.getElementById('np-dx2').value = p.dx2||'';
+  document.getElementById('np-fecha-dx').value = p.fechaDx||'';
+  document.getElementById('np-instrumento-dx').value = p.instrumentoDx||'';
+  document.getElementById('np-especialista-dx').value = p.especialistaDx||'';
+  document.getElementById('np-especialidad-dx').value = p.especialidadDx||'';
+  document.getElementById('np-inst-dx').value = p.instDx||'';
+  document.getElementById('np-medicacion').value = p.medicacion||'';
+  document.getElementById('np-alergias').value = p.alergias||'';
+  document.getElementById('np-fecha-eval').value = p.fechaEval||'';
+  document.getElementById('np-puntaje-global').value = p.puntajeGlobal||'';
+  document.getElementById('np-nivel-func').value = p.nivelFunc||'';
+  // Antecedentes
+  document.getElementById('np-perinatales').value = p.perinatales||'';
+  document.getElementById('np-psicomotor').value = p.psicomotor||'';
+  document.getElementById('np-lenguaje').value = p.histLenguaje||'';
+  document.getElementById('np-antec-fam').value = p.antecFam||'';
+  document.getElementById('np-interv-prev').value = p.intervPrev||'';
+  document.getElementById('np-obs-ingreso').value = p.obsIngreso||'';
+  // Contactos
+  document.getElementById('np-tutor1-nombre').value = p.tutor1?.nombre||'';
+  document.getElementById('np-tutor1-vinculo').value = p.tutor1?.vinculo||'';
+  document.getElementById('np-tutor1-tel').value = p.tutor1?.tel||'';
+  document.getElementById('np-tutor1-email').value = p.tutor1?.email||'';
+  document.getElementById('np-tutor2-nombre').value = p.tutor2?.nombre||'';
+  document.getElementById('np-tutor2-vinculo').value = p.tutor2?.vinculo||'';
+  document.getElementById('np-tutor2-tel').value = p.tutor2?.tel||'';
+  document.getElementById('np-tutor2-email').value = p.tutor2?.email||'';
+  document.getElementById('np-emerg-nombre').value = p.emergencia?.nombre||'';
+  document.getElementById('np-emerg-vinculo').value = p.emergencia?.vinculo||'';
+  document.getElementById('np-emerg-tel').value = p.emergencia?.tel||'';
+  document.getElementById('np-emerg-obs').value = p.emergencia?.obs||'';
+  // Selects
   const genSel = document.getElementById('np-genero');
   for(let i=0;i<genSel.options.length;i++){ if(genSel.options[i].value===p.genero){ genSel.selectedIndex=i; break; } }
-  // Nivel TEA
   const nivSel = document.getElementById('np-nivel');
   for(let i=0;i<nivSel.options.length;i++){ if(nivSel.options[i].value===p.nivelTea){ nivSel.selectedIndex=i; break; } }
-  // Estado
+  const nivDxSel = document.getElementById('np-nivel-dx');
+  for(let i=0;i<nivDxSel.options.length;i++){ if(nivDxSel.options[i].value===p.nivelDx){ nivDxSel.selectedIndex=i; break; } }
+  const sangreSel = document.getElementById('np-sangre');
+  for(let i=0;i<sangreSel.options.length;i++){ if(sangreSel.options[i].value===p.grupoSanguineo){ sangreSel.selectedIndex=i; break; } }
   const estSel = document.getElementById('np-estado');
   for(let i=0;i<estSel.options.length;i++){ if(estSel.options[i].value===(p.estado||'Activo')){ estSel.selectedIndex=i; break; } }
-  // Foto preview
   const prev = document.getElementById('np-foto-preview');
   prev.innerHTML = p.fotoURL ? `<img src="${p.fotoURL}" alt="foto">` : '📷';
   document.getElementById('np-foto-input').value='';
@@ -2034,6 +2147,31 @@ function guardarNuevoPaciente(){
     dx:         document.getElementById('np-dx').value,
     institucion:document.getElementById('np-inst').value,
     grado:      document.getElementById('np-grado').value,
+    // Diagnóstico y evaluación
+    dx2:            document.getElementById('np-dx2').value,
+    nivelDx:        document.getElementById('np-nivel-dx').value,
+    fechaDx:        document.getElementById('np-fecha-dx').value,
+    instrumentoDx:  document.getElementById('np-instrumento-dx').value,
+    especialistaDx: document.getElementById('np-especialista-dx').value,
+    especialidadDx: document.getElementById('np-especialidad-dx').value,
+    instDx:         document.getElementById('np-inst-dx').value,
+    medicacion:     document.getElementById('np-medicacion').value,
+    alergias:       document.getElementById('np-alergias').value,
+    grupoSanguineo: document.getElementById('np-sangre').value,
+    fechaEval:      document.getElementById('np-fecha-eval').value,
+    puntajeGlobal:  document.getElementById('np-puntaje-global').value,
+    nivelFunc:      document.getElementById('np-nivel-func').value,
+    // Antecedentes
+    perinatales:    document.getElementById('np-perinatales').value,
+    psicomotor:     document.getElementById('np-psicomotor').value,
+    histLenguaje:   document.getElementById('np-lenguaje').value,
+    antecFam:       document.getElementById('np-antec-fam').value,
+    intervPrev:     document.getElementById('np-interv-prev').value,
+    obsIngreso:     document.getElementById('np-obs-ingreso').value,
+    // Contactos
+    tutor1:{ nombre:document.getElementById('np-tutor1-nombre').value, vinculo:document.getElementById('np-tutor1-vinculo').value, tel:document.getElementById('np-tutor1-tel').value, email:document.getElementById('np-tutor1-email').value },
+    tutor2:{ nombre:document.getElementById('np-tutor2-nombre').value, vinculo:document.getElementById('np-tutor2-vinculo').value, tel:document.getElementById('np-tutor2-tel').value, email:document.getElementById('np-tutor2-email').value },
+    emergencia:{ nombre:document.getElementById('np-emerg-nombre').value, vinculo:document.getElementById('np-emerg-vinculo').value, tel:document.getElementById('np-emerg-tel').value, obs:document.getElementById('np-emerg-obs').value },
   };
   if(esEdicion){
     datosBase.estado = document.getElementById('np-estado').value;
@@ -2047,10 +2185,16 @@ function guardarNuevoPaciente(){
   }
 
   const resetModal = () => {
-    ['np-nombre','np-hc','np-dx','np-inst','np-grado'].forEach(i=>document.getElementById(i).value='');
-    document.getElementById('np-fnac').value='';
-    document.getElementById('np-genero').selectedIndex=0;
-    document.getElementById('np-nivel').selectedIndex=0;
+    ['np-nombre','np-hc','np-dx','np-dx2','np-inst','np-grado',
+     'np-inst-dx','np-especialista-dx','np-especialidad-dx','np-instrumento-dx',
+     'np-medicacion','np-alergias','np-puntaje-global','np-nivel-func',
+     'np-perinatales','np-psicomotor','np-lenguaje','np-antec-fam','np-interv-prev','np-obs-ingreso',
+     'np-tutor1-nombre','np-tutor1-vinculo','np-tutor1-tel','np-tutor1-email',
+     'np-tutor2-nombre','np-tutor2-vinculo','np-tutor2-tel','np-tutor2-email',
+     'np-emerg-nombre','np-emerg-vinculo','np-emerg-tel','np-emerg-obs'
+    ].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=''; });
+    ['np-fnac','np-fecha-dx','np-fecha-eval'].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=''; });
+    ['np-genero','np-nivel','np-nivel-dx','np-sangre'].forEach(i=>{ const el=document.getElementById(i); if(el) el.selectedIndex=0; });
     document.getElementById('np-foto-preview').innerHTML='📷';
     document.getElementById('np-foto-input').value='';
     document.getElementById('np-foto-progress').style.display='none';
