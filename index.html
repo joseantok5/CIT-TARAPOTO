@@ -527,12 +527,12 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
   </div>
   <div class="det-tabs" id="det-tabs">
     <button class="det-tab" onclick="detTab(0,this)">Perfil</button>
-    <button class="det-tab" onclick="detTab(1,this)">Equipo</button>
+    <button class="det-tab tab-admin-only" onclick="detTab(1,this)">Equipo</button>
     <button class="det-tab" onclick="detTab(2,this)">Plan</button>
     <button class="det-tab" onclick="detTab(3,this)">Sesiones</button>
     <button class="det-tab" onclick="detTab(4,this)">Hitos</button>
     <button class="det-tab active" onclick="detTab(5,this)">Resumen</button>
-    <button class="det-tab" onclick="detTab(6,this)">Análisis</button>
+    <button class="det-tab tab-admin-only" onclick="detTab(6,this)">Análisis</button>
   </div>
   <div class="det-content">
     <div class="det-panel" id="panel-0">
@@ -1021,6 +1021,10 @@ auth.onAuthStateChanged(user => {
     document.getElementById('btn-add-pac').style.display = esAdmin?'flex':'none';
     document.getElementById('fab-lista').style.display   = esAdmin?'flex':'none';
     document.getElementById('btn-directorio').style.display = esAdmin?'flex':'none';
+    // Pestañas solo para admin
+    document.querySelectorAll('.tab-admin-only').forEach(t=>{
+      t.style.display = esAdmin ? '' : 'none';
+    });
     showScreen('screen-pacientes');
     iniciarSync();
   } else {
