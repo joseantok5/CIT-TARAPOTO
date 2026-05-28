@@ -2739,8 +2739,9 @@ function esDxTEA(dx){
 function onPlanDiagChange(){
   const dx = document.getElementById('p-diag').value;
   const pac = pacientes[pacienteActivo];
-  // Si no seleccionó nada, usar el dx del paciente
   const dxEfectivo = dx || pac?.dx || '';
+
+  // ── Dominio Denver ────────────────────────────────────────────
   const wrap = document.getElementById('p-dom-wrap');
   if(wrap){
     if(esDxTEA(dxEfectivo)){
@@ -2753,6 +2754,16 @@ function onPlanDiagChange(){
       wrap.querySelector('select').value='';
       wrap.querySelector('label').textContent='Dominio Denver (solo TEA)';
     }
+  }
+
+  // ── Nivel dinámico según diagnóstico ──────────────────────────
+  const nivSel = document.getElementById('p-nivel');
+  if(nivSel){
+    const currentVal = nivSel.value;
+    const niveles = NIVELES_POR_DX[dxEfectivo] || ['Nivel 1','Nivel 2','Nivel 3'];
+    nivSel.innerHTML = '<option value="">Seleccionar</option>' + niveles.map(n=>`<option>${n}</option>`).join('');
+    // Restaurar valor previo si sigue siendo válido
+    if(currentVal && niveles.includes(currentVal)) nivSel.value = currentVal;
   }
 }
 
