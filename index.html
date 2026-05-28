@@ -15,31 +15,41 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 <style>
 /* ══════════════════════════════════════════
-   CIT NIÑOS FELICES — SPACE THEME
+   CIT NIÑOS FELICES — WARM NATURE THEME
    ══════════════════════════════════════════ */
 :root{
-  --navy:#1a1060;--navy2:#0a0520;
-  --teal:#38bdf8;--teal2:#7dd3fc;
-  --sand:#0f0a2e;--sand2:rgba(255,255,255,.08);--sand3:rgba(255,255,255,.14);
-  --white:rgba(255,255,255,.07);--text:#e8eaf6;--text2:#b0b8e8;--text3:rgba(255,255,255,.4);
-  --green:#4ade80;--green2:rgba(74,222,128,.15);
-  --red:#f87171;--red2:rgba(248,113,113,.15);
-  --amber:#fbbf24;--amber2:rgba(251,191,36,.15);
-  --purple:#a78bfa;--purple2:rgba(167,139,250,.15);
-  --radius:14px;--radius-sm:10px;
-  --shadow:0 2px 16px rgba(0,0,20,.35);--shadow-md:0 4px 28px rgba(0,0,20,.5);
-  --glass:rgba(255,255,255,.07);--glass-border:rgba(255,255,255,.12);
-  --grad:linear-gradient(135deg,#3b6fd4,#6c3fe8);
-  --grad2:linear-gradient(135deg,#0ea5e9,#3b6fd4);
+  /* Fondo cálido oscuro */
+  --navy:#0d1f12;--navy2:#070f09;
+  /* Acentos principales */
+  --coral:#f4845f;--coral2:#e8674a;
+  --teal:#52b788;--teal2:#74c69d;
+  --amber:#f4b942;--amber2:#e8a82e;
+  /* Texto */
+  --text:#f0ede6;--text2:#c8d4bc;--text3:rgba(240,237,230,.45);
+  /* Semáforo */
+  --green:#52b788;--green2:rgba(82,183,136,.18);
+  --red:#e07058;--red2:rgba(224,112,88,.18);
+  --purple:#c3a882;--purple2:rgba(195,168,130,.15);
+  /* Vidrio cálido */
+  --glass:rgba(255,245,235,.06);--glass-border:rgba(255,245,220,.13);
+  --sand:rgba(255,245,225,.05);--sand2:rgba(255,245,225,.08);--sand3:rgba(255,245,225,.13);
+  --white:rgba(255,245,225,.06);
+  /* Gradientes principales */
+  --grad:linear-gradient(135deg,#e8674a,#f4b942);
+  --grad2:linear-gradient(135deg,#52b788,#2d9e6a);
+  --grad3:linear-gradient(135deg,#f4845f,#c3a882);
+  /* Sombras */
+  --shadow:0 2px 16px rgba(0,10,5,.4);--shadow-md:0 4px 28px rgba(0,10,5,.55);
+  --radius:16px;--radius-sm:11px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;background:#050212}
+html,body{height:100%;overflow:hidden;background:#070f09}
 body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;line-height:1.5}
 
 /* ── SCREENS ──────────────────────────────────────────────────── */
 .screen{
   display:none;position:absolute;inset:0;
-  background:radial-gradient(ellipse at 70% -10%,#1a1060 0%,#0a0520 45%,#050212 100%);
+  background:radial-gradient(ellipse at 70% -10%,#0d2e18 0%,#071409 45%,#040b05 100%);
   z-index:1;overflow:hidden;flex-direction:column
 }
 .screen.active{display:flex}
@@ -47,26 +57,26 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 .screen::before{
   content:'';position:absolute;inset:0;
   background-image:
-    radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.7) 0%,transparent 100%),
-    radial-gradient(1px 1px at 25% 40%,rgba(255,255,255,.5) 0%,transparent 100%),
-    radial-gradient(1.5px 1.5px at 40% 8%,rgba(255,255,255,.8) 0%,transparent 100%),
-    radial-gradient(1px 1px at 55% 55%,rgba(255,255,255,.4) 0%,transparent 100%),
-    radial-gradient(1px 1px at 70% 20%,rgba(255,255,255,.6) 0%,transparent 100%),
-    radial-gradient(1.5px 1.5px at 80% 70%,rgba(255,255,255,.5) 0%,transparent 100%),
-    radial-gradient(1px 1px at 90% 35%,rgba(255,255,255,.7) 0%,transparent 100%),
-    radial-gradient(1px 1px at 15% 75%,rgba(255,255,255,.4) 0%,transparent 100%),
-    radial-gradient(1px 1px at 60% 85%,rgba(255,255,255,.3) 0%,transparent 100%),
-    radial-gradient(1px 1px at 35% 60%,rgba(255,255,255,.5) 0%,transparent 100%);
+    radial-gradient(1.5px 1.5px at 8% 12%,rgba(244,180,80,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 22% 38%,rgba(82,183,136,.4) 0%,transparent 100%),
+    radial-gradient(2px 2px at 38% 7%,rgba(244,132,95,.45) 0%,transparent 100%),
+    radial-gradient(1px 1px at 52% 52%,rgba(244,185,66,.35) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 68% 18%,rgba(82,183,136,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 80% 68%,rgba(244,132,95,.3) 0%,transparent 100%),
+    radial-gradient(2px 2px at 88% 32%,rgba(244,185,66,.45) 0%,transparent 100%),
+    radial-gradient(1px 1px at 14% 72%,rgba(82,183,136,.35) 0%,transparent 100%),
+    radial-gradient(1px 1px at 58% 82%,rgba(244,132,95,.25) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 33% 58%,rgba(244,180,80,.4) 0%,transparent 100%);
   pointer-events:none;z-index:0
 }
 
 /* ── LOGIN ────────────────────────────────────────────────────── */
 #screen-login{
-  background:radial-gradient(ellipse at 60% 0%,#1a1060 0%,#0a0520 40%,#050212 100%);
+  background:radial-gradient(ellipse at 50% 100%,#1a3d22 0%,#0a1e0e 50%,#040b05 100%);
   align-items:center;justify-content:center;padding:0;overflow:hidden;position:relative
 }
 .login-stars{position:absolute;inset:0;pointer-events:none;z-index:0}
-.login-star{position:absolute;border-radius:50%;background:white;animation:twinkle 2s infinite alternate}
+.login-star{position:absolute;border-radius:50%;background:rgba(244,185,66,.8);animation:twinkle 2s infinite alternate}
 @keyframes twinkle{0%{opacity:.2;transform:scale(1)}100%{opacity:1;transform:scale(1.3)}}
 .login-moon{position:absolute;top:5%;right:12%;font-size:32px;z-index:1;animation:float 4s ease-in-out infinite}
 .login-sparkle{position:absolute;font-size:16px;z-index:1;animation:sparkle 3s ease-in-out infinite}
@@ -76,13 +86,13 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 .login-rocket{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);font-size:40px;z-index:2;animation:rocketFloat 3s ease-in-out infinite}
 @keyframes rocketFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-10px)}}
 .login-content{position:relative;z-index:3;width:100%;max-width:360px;padding:0 24px;display:flex;flex-direction:column;align-items:center;padding-bottom:130px}
-.login-logo-img{width:130px;height:130px;border-radius:50%;object-fit:cover;margin-bottom:10px;filter:drop-shadow(0 0 20px rgba(100,150,255,.5));animation:float 4s ease-in-out infinite}
+.login-logo-img{width:130px;height:130px;border-radius:50%;object-fit:cover;margin-bottom:10px;filter:drop-shadow(0 0 20px rgba(82,183,136,.5));animation:float 4s ease-in-out infinite}
 .login-tagline{text-align:center;font-size:12px;color:rgba(255,255,255,.65);margin-bottom:22px;line-height:1.5;max-width:260px}
 .login-input{width:100%;padding:13px 20px;border-radius:30px;border:none;background:rgba(255,255,255,.15);color:white;font-family:inherit;font-size:14px;outline:none;margin-bottom:12px;transition:.2s;backdrop-filter:blur(6px);text-align:center}
 .login-input:focus{background:rgba(255,255,255,.22);box-shadow:0 0 0 2px rgba(99,179,237,.5)}
 .login-input::placeholder{color:rgba(255,255,255,.5)}
-.login-btn{width:100%;padding:14px;border-radius:30px;border:none;background:var(--grad);color:white;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;margin-top:4px;letter-spacing:.08em;box-shadow:0 4px 20px rgba(108,63,232,.45)}
-.login-btn:hover{filter:brightness(1.15);box-shadow:0 6px 24px rgba(108,63,232,.6)}
+.login-btn{width:100%;padding:14px;border-radius:30px;border:none;background:var(--grad);color:white;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;margin-top:4px;letter-spacing:.08em;box-shadow:0 4px 20px rgba(244,132,95,.4)}
+.login-btn:hover{filter:brightness(1.1);box-shadow:0 6px 24px rgba(244,132,95,.55)}
 .login-btn:active{transform:scale(.97)}
 .login-btn:disabled{opacity:.5;cursor:not-allowed}
 .login-err{background:rgba(220,38,38,.2);border:1px solid rgba(220,38,38,.4);color:#fca5a5;border-radius:20px;padding:10px 16px;font-size:12px;margin-bottom:12px;display:none;text-align:center;width:100%}
@@ -91,18 +101,18 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 
 /* ── TOP BAR ──────────────────────────────────────────────────── */
 .top-bar{
-  background:linear-gradient(135deg,rgba(26,16,96,.95),rgba(10,5,32,.98));
-  border-bottom:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg,rgba(13,31,18,.97),rgba(7,15,9,.98));
+  border-bottom:1px solid rgba(82,183,136,.15);
   padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
   box-shadow:0 2px 20px rgba(0,0,20,.4);backdrop-filter:blur(12px);position:relative;z-index:2
 }
-.top-logo{font-size:18px;font-weight:700;color:white;letter-spacing:-.5px}
-.top-logo span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.top-logo{font-size:18px;font-weight:700;color:var(--text);letter-spacing:-.5px}
+.top-logo span{color:var(--coral);-webkit-text-fill-color:var(--coral)}
 .top-user{font-size:11px;color:rgba(255,255,255,.4);margin-top:1px}
 .top-right{display:flex;align-items:center;gap:8px}
 .sync-badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;white-space:nowrap;background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)}
-.sync-ok{background:rgba(74,222,128,.15);color:#4ade80}
-.sync-err{background:rgba(248,113,113,.15);color:#f87171}
+.sync-ok{background:rgba(82,183,136,.18);color:#74c69d}
+.sync-err{background:rgba(248,113,113,.15);color:var(--red)}
 .btn-icon{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:.15s}
 .btn-icon:active{transform:scale(.92)}
 .btn-icon:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25)}
@@ -122,7 +132,7 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 .scroll-area::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
 
 /* ── PATIENT CARDS ────────────────────────────────────────────── */
-.section-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin:8px 0 6px 2px}
+.section-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:rgba(116,198,157,.55);margin:8px 0 6px 2px}
 .patient-card{
   background:var(--glass);
   border:1px solid var(--glass-border);
@@ -131,30 +141,30 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
   box-shadow:var(--shadow);cursor:pointer;transition:.2s;
   backdrop-filter:blur(8px)
 }
-.patient-card:hover{background:rgba(255,255,255,.1);border-color:rgba(108,63,232,.3);box-shadow:0 4px 20px rgba(108,63,232,.15)}
+.patient-card:hover{background:rgba(82,183,136,.08);border-color:rgba(82,183,136,.3);box-shadow:0 4px 20px rgba(82,183,136,.12)}
 .patient-card:active{transform:scale(.98)}
 .p-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;border:1.5px solid rgba(255,255,255,.15)}
 .p-name{font-size:13px;font-weight:600;color:var(--text)}
 .p-meta{font-size:11px;color:var(--text3);margin-top:1px}
 .p-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
-.b-activo{background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.25)}
+.b-activo{background:rgba(74,222,128,.15);color:var(--teal);border:1px solid rgba(74,222,128,.25)}
 .b-alta{background:rgba(255,255,255,.08);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.12)}
-.b-suspension{background:rgba(248,113,113,.15);color:#f87171;border:1px solid rgba(248,113,113,.25)}
+.b-suspension{background:rgba(248,113,113,.15);color:var(--red);border:1px solid rgba(248,113,113,.25)}
 
 /* ── FAB ──────────────────────────────────────────────────────── */
 .fab{
   position:fixed;right:18px;bottom:18px;width:52px;height:52px;border-radius:50%;
   background:var(--grad);color:white;border:none;font-size:24px;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 24px rgba(108,63,232,.55);z-index:15;transition:.2s
+  box-shadow:0 4px 24px rgba(244,132,95,.45);z-index:15;transition:.2s
 }
-.fab:hover{filter:brightness(1.15);box-shadow:0 6px 28px rgba(108,63,232,.7)}
+.fab:hover{filter:brightness(1.1);box-shadow:0 6px 28px rgba(244,132,95,.6)}
 .fab:active{transform:scale(.92)}
 
 /* ── DETALLE TOP/TABS ─────────────────────────────────────────── */
 .det-topbar{
-  background:linear-gradient(135deg,rgba(26,16,96,.95),rgba(10,5,32,.98));
-  border-bottom:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg,rgba(13,31,18,.97),rgba(7,15,9,.98));
+  border-bottom:1px solid rgba(82,183,136,.15);
   padding:11px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;
   box-shadow:0 2px 20px rgba(0,0,20,.4);position:relative;z-index:2
 }
@@ -168,8 +178,8 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 .det-hc{font-size:10px;color:rgba(255,255,255,.35)}
 .det-tabs{
   display:flex;
-  background:rgba(5,2,18,.9);
-  border-bottom:1px solid rgba(255,255,255,.07);
+  background:rgba(4,8,5,.92);
+  border-bottom:1px solid rgba(82,183,136,.12);
   flex-shrink:0;overflow-x:auto;position:relative;z-index:2
 }
 .det-tabs::-webkit-scrollbar{display:none}
@@ -178,10 +188,10 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
   color:rgba(255,255,255,.35);border:none;background:none;cursor:pointer;
   border-bottom:2.5px solid transparent;white-space:nowrap;font-family:inherit;transition:.2s
 }
-.det-tab:hover{color:rgba(255,255,255,.65)}
+.det-tab:hover{color:var(--teal2)}
 .det-tab.active{
-  color:#a78bfa;border-bottom-color:#a78bfa;
-  text-shadow:0 0 12px rgba(167,139,250,.6)
+  color:var(--coral);border-bottom-color:var(--coral);
+  text-shadow:0 0 10px rgba(244,132,95,.5)
 }
 .det-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px 90px;position:relative;z-index:1}
 .det-content::-webkit-scrollbar{width:3px}
@@ -197,14 +207,14 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
   border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;
   box-shadow:var(--shadow);backdrop-filter:blur(8px)
 }
-.card-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(167,139,250,.8);margin-bottom:12px}
+.card-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal2);margin-bottom:12px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .metric{
   background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
   border-radius:var(--radius-sm);padding:11px 12px
 }
 .metric-label{font-size:10px;color:var(--text3);margin-bottom:3px}
-.metric-value{font-size:22px;font-weight:700;line-height:1;color:#a78bfa}
+.metric-value{font-size:22px;font-weight:700;line-height:1;color:var(--coral)}
 .metric-sub{font-size:10px;color:var(--text3);margin-top:2px}
 .kv-row{display:flex;align-items:flex-start;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);gap:8px}
 .kv-row:last-child{border-bottom:none}
@@ -213,18 +223,18 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 
 /* ── TAGS ─────────────────────────────────────────────────────── */
 .tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;margin:2px 2px 2px 0;white-space:nowrap}
-.t-teal{background:rgba(56,189,248,.15);color:#7dd3fc;border:1px solid rgba(56,189,248,.2)}
-.t-navy{background:rgba(96,165,250,.15);color:#93c5fd;border:1px solid rgba(96,165,250,.2)}
-.t-green{background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.2)}
-.t-amber{background:rgba(251,191,36,.15);color:#fcd34d;border:1px solid rgba(251,191,36,.2)}
-.t-purple{background:rgba(167,139,250,.15);color:#c4b5fd;border:1px solid rgba(167,139,250,.2)}
-.t-coral{background:rgba(248,113,113,.15);color:#fca5a5;border:1px solid rgba(248,113,113,.2)}
-.t-gray{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.12)}
+.t-teal{background:rgba(82,183,136,.15);color:#74c69d;border:1px solid rgba(82,183,136,.22)}
+.t-navy{background:rgba(195,168,130,.15);color:#d4b896;border:1px solid rgba(195,168,130,.22)}
+.t-green{background:rgba(82,183,136,.15);color:#52b788;border:1px solid rgba(82,183,136,.22)}
+.t-amber{background:rgba(244,185,66,.15);color:#f4b942;border:1px solid rgba(244,185,66,.22)}
+.t-purple{background:rgba(244,132,95,.15);color:#f4845f;border:1px solid rgba(244,132,95,.22)}
+.t-coral{background:rgba(224,112,88,.15);color:#e8876a;border:1px solid rgba(224,112,88,.22)}
+.t-gray{background:rgba(255,245,225,.07);color:rgba(240,230,210,.65);border:1px solid rgba(255,245,225,.14)}
 
 /* ── SCORE ────────────────────────────────────────────────────── */
 .score{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-size:11px;font-weight:700;flex-shrink:0}
-.s1{background:rgba(248,113,113,.2);color:#f87171}.s2{background:rgba(251,191,36,.2);color:#fbbf24}
-.s3{background:rgba(96,165,250,.2);color:#60a5fa}.s4{background:rgba(52,211,153,.2);color:#34d399}.s5{background:rgba(74,222,128,.2);color:#4ade80}
+.s1{background:rgba(248,113,113,.2);color:var(--red)}.s2{background:rgba(251,191,36,.2);color:var(--amber)}
+.s3{background:rgba(96,165,250,.2);color:#60a5fa}.s4{background:rgba(52,211,153,.2);color:#34d399}.s5{background:rgba(74,222,128,.2);color:var(--teal)}
 
 /* ── PROGRESS ─────────────────────────────────────────────────── */
 .prog-wrap{margin-bottom:9px}
@@ -244,19 +254,19 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 .ses-date{font-size:11px;color:var(--text3)}
 .ses-logro{font-size:12px;color:var(--text2);line-height:1.45;margin-top:4px}
 .ses-foot{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;align-items:center}
-.react-pos{color:#4ade80;font-size:11px;font-weight:600}
-.react-neg{color:#f87171;font-size:11px;font-weight:600}
+.react-pos{color:var(--teal);font-size:11px;font-weight:600}
+.react-neg{color:var(--red);font-size:11px;font-weight:600}
 .react-neu{color:var(--text3);font-size:11px}
 .locked-banner{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--text3);text-align:center;margin-bottom:8px}
 
 /* ── HITO ─────────────────────────────────────────────────────── */
 .hito-card{
-  border-left:3px solid #4ade80;
+  border-left:3px solid var(--teal2);
   border-radius:0 var(--radius-sm) var(--radius-sm) 0;
-  background:rgba(74,222,128,.05);padding:11px 13px;margin-bottom:8px;
-  border-top:1px solid rgba(74,222,128,.15);
-  border-right:1px solid rgba(74,222,128,.1);
-  border-bottom:1px solid rgba(74,222,128,.1)
+  background:rgba(82,183,136,.05);padding:11px 13px;margin-bottom:8px;
+  border-top:1px solid rgba(82,183,136,.15);
+  border-right:1px solid rgba(82,183,136,.1);
+  border-bottom:1px solid rgba(82,183,136,.1)
 }
 
 /* ── PLAN ─────────────────────────────────────────────────────── */
@@ -274,16 +284,16 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 /* ── RESUMEN ──────────────────────────────────────────────────── */
 .mes-sel{display:flex;gap:8px;align-items:center;margin-bottom:12px}
 .mes-sel select{flex:1;padding:9px 12px;border:1px solid var(--glass-border);border-radius:var(--radius-sm);font-family:inherit;font-size:13px;font-weight:500;background:rgba(255,255,255,.08);color:var(--text)}
-.tend-up{color:#4ade80;font-weight:600}
-.tend-dn{color:#f87171;font-weight:600}
+.tend-up{color:var(--teal);font-weight:600}
+.tend-dn{color:var(--red);font-weight:600}
 .tend-eq{color:var(--text3)}
 
 /* ── MODAL ────────────────────────────────────────────────────── */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,10,.75);backdrop-filter:blur(4px);z-index:50;align-items:flex-end;justify-content:center}
 .modal-bg.open{display:flex}
 .modal{
-  background:linear-gradient(160deg,rgba(26,16,96,.97),rgba(8,4,28,.98));
-  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(160deg,rgba(13,31,18,.97),rgba(5,12,7,.99));
+  border:1px solid rgba(82,183,136,.18);
   border-radius:var(--radius) var(--radius) 0 0;
   padding:18px 18px 36px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;
   box-shadow:0 -8px 40px rgba(0,0,20,.6)
@@ -293,7 +303,7 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 
 /* ── FORM FIELDS ──────────────────────────────────────────────── */
 .fg{margin-bottom:11px}
-.fg label{font-size:11px;font-weight:600;color:rgba(167,139,250,.8);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.fg label{font-size:11px;font-weight:600;color:rgba(116,198,157,.85);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
 .fg input,.fg select,.fg textarea{
   width:100%;padding:10px 12px;
   border:1px solid rgba(255,255,255,.12);border-radius:var(--radius-sm);
@@ -302,12 +312,12 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
   outline:none;transition:.2s
 }
 .fg input:focus,.fg select:focus,.fg textarea:focus{
-  border-color:rgba(108,63,232,.6);background:rgba(255,255,255,.1);
-  box-shadow:0 0 0 3px rgba(108,63,232,.2)
+  border-color:rgba(82,183,136,.6);background:rgba(255,245,225,.08);
+  box-shadow:0 0 0 3px rgba(82,183,136,.15)
 }
 .fg input::placeholder,.fg textarea::placeholder{color:rgba(255,255,255,.25)}
 .fg textarea{resize:none;height:76px}
-.fg select option{background:#1a1060;color:white}
+.fg select option{background:#0d1f12;color:var(--text)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .modal-actions{display:flex;gap:8px;margin-top:14px}
 
@@ -319,16 +329,16 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 }
 .btn:hover{background:rgba(255,255,255,.12)}
 .btn:active{transform:scale(.97)}
-.btn-primary{background:var(--grad);color:white;border:none;box-shadow:0 3px 14px rgba(108,63,232,.4)}
-.btn-primary:hover{filter:brightness(1.12);box-shadow:0 4px 20px rgba(108,63,232,.55)}
-.btn-teal{background:var(--grad2);color:white;border:none;box-shadow:0 3px 12px rgba(59,111,212,.4)}
+.btn-primary{background:var(--grad);color:white;border:none;box-shadow:0 3px 14px rgba(244,132,95,.35)}
+.btn-primary:hover{filter:brightness(1.08);box-shadow:0 4px 20px rgba(244,132,95,.5)}
+.btn-teal{background:var(--grad2);color:white;border:none;box-shadow:0 3px 12px rgba(82,183,136,.3)}
 .btn-teal:hover{filter:brightness(1.12)}
 .btn-danger{background:rgba(248,113,113,.2);color:#fca5a5;border:1px solid rgba(248,113,113,.3)}
 .btn-danger:hover{background:rgba(248,113,113,.3)}
 .btn-edit{
-  padding:4px 12px;border-radius:20px;border:1px solid rgba(167,139,250,.3);
-  background:rgba(167,139,250,.1);font-size:11px;font-weight:600;cursor:pointer;
-  color:#c4b5fd;font-family:inherit;transition:.15s
+  padding:4px 12px;border-radius:20px;border:1px solid rgba(82,183,136,.3);
+  background:rgba(82,183,136,.1);font-size:11px;font-weight:600;cursor:pointer;
+  color:#74c69d;font-family:inherit;transition:.15s
 }
 .btn-del{
   padding:4px 12px;border-radius:20px;border:1px solid rgba(248,113,113,.3);
@@ -338,11 +348,11 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 .btn-edit:active,.btn-del:active{transform:scale(.96)}
 .btn-pdf{
   display:inline-flex;align-items:center;gap:5px;padding:7px 12px;
-  border-radius:var(--radius-sm);border:1px solid rgba(56,189,248,.25);
-  background:rgba(56,189,248,.1);color:#7dd3fc;font-size:12px;font-weight:600;
+  border-radius:var(--radius-sm);border:1px solid rgba(82,183,136,.25);
+  background:rgba(82,183,136,.1);color:#74c69d;font-size:12px;font-weight:600;
   cursor:pointer;font-family:inherit;transition:.15s;white-space:nowrap
 }
-.btn-pdf:hover{background:rgba(56,189,248,.18)}
+.btn-pdf:hover{background:rgba(82,183,136,.18)}
 
 /* ── FOTO UPLOAD ──────────────────────────────────────────────── */
 .foto-upload-wrap{display:flex;align-items:center;gap:14px;margin-bottom:14px}
@@ -368,8 +378,8 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 .empty-text{font-size:13px}
 
 /* ── ROLE BADGES ──────────────────────────────────────────────── */
-.role-admin{background:rgba(251,191,36,.15);color:#fbbf24;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid rgba(251,191,36,.2)}
-.role-ter{background:rgba(56,189,248,.15);color:#7dd3fc;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid rgba(56,189,248,.2)}
+.role-admin{background:rgba(244,185,66,.15);color:#f4b942;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid rgba(244,185,66,.22)}
+.role-ter{background:rgba(82,183,136,.15);color:#74c69d;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid rgba(82,183,136,.22)}
 
 /* ── TERAPEUTA PICKER ─────────────────────────────────────────── */
 
@@ -446,11 +456,11 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
   </div>
   <!-- Nubes y cohete -->
   <svg class="login-clouds" viewBox="0 0 400 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="60" cy="110" rx="80" ry="35" fill="rgba(80,80,120,.5)"/>
-    <ellipse cx="50" cy="100" rx="55" ry="28" fill="rgba(100,100,150,.45)"/>
-    <ellipse cx="200" cy="115" rx="100" ry="30" fill="rgba(70,70,110,.5)"/>
-    <ellipse cx="340" cy="108" rx="80" ry="32" fill="rgba(80,80,120,.45)"/>
-    <ellipse cx="360" cy="98" rx="55" ry="26" fill="rgba(100,100,150,.4)"/>
+    <ellipse cx="60" cy="110" rx="80" ry="35" fill="rgba(13,40,20,.6)"/>
+    <ellipse cx="50" cy="100" rx="55" ry="28" fill="rgba(20,50,28,.55)"/>
+    <ellipse cx="200" cy="115" rx="100" ry="30" fill="rgba(10,30,15,.65)"/>
+    <ellipse cx="340" cy="108" rx="80" ry="32" fill="rgba(13,40,20,.6)"/>
+    <ellipse cx="360" cy="98" rx="55" ry="26" fill="rgba(20,50,28,.5)"/>
   </svg>
   <div class="login-rocket">🚀</div>
 </div>
@@ -478,7 +488,7 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
     </div>
   </div>
   <div class="scroll-area" id="lista-pacientes"><div class="section-label">5 pacientes</div><div class="patient-card" onclick="abrirPaciente(&#39;pac_1776725318902&#39;)">
-        <div class="p-avatar" style="background:rgba(96,165,250,.08);color:#93c5fd">CP</div>
+        <div class="p-avatar" style="background:rgba(96,165,250,.08);color:var(--amber)">CP</div>
         <div style="flex:1;min-width:0">
           <div class="p-name">COHEN PINEDO MAYER JAHAZIEL</div>
           <div class="p-meta">HC-2026-004 · — · Nivel 1 — Requiere apoyo</div>
@@ -506,7 +516,7 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
         </div>
         <span class="p-badge b-activo">Activo</span>
       </div><div class="patient-card" onclick="abrirPaciente(&#39;pac_1776725208206&#39;)">
-        <div class="p-avatar" style="background:rgba(251,191,36,.25);color:#fbbf24">SL</div>
+        <div class="p-avatar" style="background:rgba(251,191,36,.25);color:var(--amber)">SL</div>
         <div style="flex:1;min-width:0">
           <div class="p-name">SALAZAR LOPEZ JACK EMILIANO</div>
           <div class="p-meta">HC-2026-003 · 4 años y 4 meses · Nivel 1 — Requiere apoyo</div>
@@ -520,7 +530,7 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 <div class="screen" id="screen-detalle">
   <div class="det-topbar">
     <button class="btn-back" onclick="volverLista()">‹</button>
-    <div id="det-topbar-avatar" style="width:44px;height:44px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;overflow:hidden;border:2px solid rgba(255,255,255,.2);box-shadow:0 0 12px rgba(108,63,232,.4);background:rgba(255,255,255,.1)"></div>
+    <div id="det-topbar-avatar" style="width:44px;height:44px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;overflow:hidden;border:2px solid rgba(255,255,255,.2);box-shadow:0 0 12px rgba(82,183,136,.3);background:rgba(255,255,255,.1)"></div>
     <div style="flex:1;min-width:0">
       <div class="det-name" id="det-nombre">MEGO DÍAZ DYLAN KALED</div>
       <div class="det-hc" id="det-hc">HC-2026-001</div>
@@ -901,7 +911,7 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
         <option>Musicoterapia</option><option>Fonoaudiología</option>
         <option>Terapia Familiar</option><option>Intervención ESDM / Denver</option>
       </select></div>
-        <button type="button" onclick="agregarTerapiaPersonalizada('s-tipo')" style="flex-shrink:0;padding:9px 10px;border-radius:var(--radius-sm);border:1px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit" title="Agregar terapia personalizada">+ Nueva</button>
+        <button type="button" onclick="agregarTerapiaPersonalizada('s-tipo')" style="flex-shrink:0;padding:9px 10px;border-radius:var(--radius-sm);border:1px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:var(--teal2);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit" title="Agregar terapia personalizada">+ Nueva</button>
       </div>
     </div>
     <div class="fg">
@@ -1004,7 +1014,7 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
           <select style="flex:1" id="h-tipo" onchange="autoTer(&#39;h-tipo&#39;,&#39;h-ter&#39;)">
             <option value="">Seleccionar...</option>
           </select>
-          <button type="button" onclick="agregarTerapiaPersonalizada(&#39;h-tipo&#39;)" style="flex-shrink:0;padding:9px 10px;border-radius:var(--radius-sm);border:1px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">+ Nueva</button>
+          <button type="button" onclick="agregarTerapiaPersonalizada(&#39;h-tipo&#39;)" style="flex-shrink:0;padding:9px 10px;border-radius:var(--radius-sm);border:1px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:var(--teal2);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">+ Nueva</button>
         </div>
       </div>
     </div>
@@ -1043,7 +1053,7 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
           <select style="flex:1" id="p-tipo" onchange="autoTer(&#39;p-tipo&#39;,&#39;p-ter&#39;)">
             <option value="">Seleccionar...</option>
           </select>
-          <button type="button" onclick="agregarTerapiaPersonalizada(&#39;p-tipo&#39;)" style="flex-shrink:0;padding:9px 10px;border-radius:var(--radius-sm);border:1px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">+ Nueva</button>
+          <button type="button" onclick="agregarTerapiaPersonalizada(&#39;p-tipo&#39;)" style="flex-shrink:0;padding:9px 10px;border-radius:var(--radius-sm);border:1px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:var(--teal2);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">+ Nueva</button>
         </div>
       </div>
       <div class="fg"><label>Terapeuta</label><input id="p-ter" type="text"></div>
@@ -1152,24 +1162,24 @@ const TIPO_CLS = {
 };
 const TIPO_HEX = {
   // TEA
-  'Terapia de Lenguaje':'#7c3aed','Terapia Conductual (ABA)':'#dc2626',
-  'Terapia Ocupacional':'#1e40af','Terapia de Integración Sensorial':'#0e7490',
-  'Intervención ESDM / Denver':'#0e7490',
+  'Terapia de Lenguaje':'#f4845f','Terapia Conductual (ABA)':'#e8674a',
+  'Terapia Ocupacional':'#52b788','Terapia de Integración Sensorial':'#2d9e6a',
+  'Intervención ESDM / Denver':'#74c69d',
   // TDAH
-  'Terapia Cognitivo-Conductual':'#d97706','Psicoeducación':'#b45309',
-  'Entrenamiento en Habilidades Sociales':'#16a34a',
+  'Terapia Cognitivo-Conductual':'#f4b942','Psicoeducación':'#e8a82e',
+  'Entrenamiento en Habilidades Sociales':'#52b788',
   // Retraso Psicomotor
-  'Fisioterapia':'#15803d','Psicomotricidad':'#16a34a','Estimulación Temprana':'#0e7490',
+  'Fisioterapia':'#2d9e6a','Psicomotricidad':'#52b788','Estimulación Temprana':'#74c69d',
   // Retraso del Habla
-  'Fonoaudiología':'#0891b2','Estimulación del Lenguaje':'#6d28d9',
+  'Fonoaudiología':'#c3a882','Estimulación del Lenguaje':'#f4845f',
   // TOD
-  'Terapia Familiar':'#6b7280','Terapia de Conducta':'#b91c1c','Mindfulness Infantil':'#92400e',
+  'Terapia Familiar':'#a89070','Terapia de Conducta':'#e8674a','Mindfulness Infantil':'#f4b942',
   // Discapacidad Intelectual
-  'Estimulación Cognitiva':'#1d4ed8','Terapia de Aprendizaje Adaptativo':'#1e40af',
+  'Estimulación Cognitiva':'#52b788','Terapia de Aprendizaje Adaptativo':'#2d9e6a',
   // Parálisis Cerebral
-  'Hidroterapia':'#0e7490','Terapia de Neurodesarrollo (NDT)':'#5b21b6',
+  'Hidroterapia':'#74c69d','Terapia de Neurodesarrollo (NDT)':'#c3a882',
   // General
-  'Terapia de Juego':'#d97706','Musicoterapia':'#7c3aed','Arteterapia':'#c2410c',
+  'Terapia de Juego':'#f4b942','Musicoterapia':'#f4845f','Arteterapia':'#e8a82e',
 };
 
 // ── Terapias sugeridas por diagnóstico ───────────────────────────
@@ -1211,8 +1221,8 @@ const TERAPIAS_POR_DX = {
   ],
 };
 
-const AV_BG  = ['rgba(96,165,250,.08)','rgba(52,211,153,.07)','#ede9fe','rgba(248,113,113,.1)','#fef3c7','#fce7f3','#e0f2fe','#dcfce7'];
-const AV_COL = ['#1e40af','#065f46','#5b21b6','#991b1b','#92400e','#9d174d','#0369a1','#14532d'];
+const AV_BG  = ['rgba(244,132,95,.12)','rgba(82,183,136,.1)','rgba(244,185,66,.12)','rgba(195,168,130,.12)','rgba(116,198,157,.1)','rgba(232,164,74,.1)','rgba(244,132,95,.08)','rgba(82,183,136,.08)'];
+const AV_COL = ['#f4845f','#52b788','#f4b942','#c3a882','#74c69d','#e8a82e','#e8674a','#2d9e6a'];
 
 // ── Helpers ───────────────────────────────────────────────────────
 const ini   = n => n.split(' ').filter(w=>w.length>2).slice(0,2).map(w=>w[0].toUpperCase()).join('');
@@ -1680,7 +1690,7 @@ function renderPerfil(){
         data:{labels:tipos.map(t=>t[0].replace('Terapia de ','').replace('Terapia ','').replace(' (ABA)','')),
           datasets:[{data:tipos.map(t=>t[1]),backgroundColor:tipos.map(t=>TIPO_HEX[t[0]]||'#888'),borderWidth:0,borderRadius:4}]},
         options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-          scales:{y:{beginAtZero:true,ticks:{stepSize:1,font:{size:10}},grid:{color:'rgba(0,0,0,.04)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
+          scales:{y:{beginAtZero:true,ticks:{stepSize:1,color:'rgba(240,225,200,.5)',font:{size:10}},grid:{color:'rgba(82,183,136,.08)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}});
     },100);
   }
 }
@@ -1705,7 +1715,7 @@ function renderEquipo(){
   const canEdit = usuarioActual?.esAdmin;
   document.getElementById('panel-1').innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <div style="font-size:14px;font-weight:700;color:#a78bfa">Equipo terapéutico</div>
+      <div style="font-size:14px;font-weight:700;color:var(--teal2)">Equipo terapéutico</div>
       ${canEdit?`<button class="btn btn-teal" style="flex:none;padding:6px 14px;font-size:12px" onclick="abrirNuevoTerapeuta()">+ Agregar</button>`:''}
     </div>
     <div class="card" style="padding:10px 14px">
@@ -1769,18 +1779,18 @@ function renderPlan(){
   const puedeAgregar=esAdmin||!!miTipo;
   document.getElementById('panel-2').innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <div style="font-size:14px;font-weight:700;color:#a78bfa">
+      <div style="font-size:14px;font-weight:700;color:var(--teal2)">
         ${esAdmin?'Plan terapéutico completo':`Mi plan — ${miTipo||'Sin especialidad asignada'}`}
       </div>
       ${puedeAgregar?`<button class="btn btn-teal" style="flex:none;padding:6px 14px;font-size:12px" onclick="document.getElementById('p-modal-title').textContent='Nuevo objetivo terapéutico';document.getElementById('p-edit-idx').value='-1';document.getElementById('p-diag').value='';onPlanDiagChange();openModal('modal-plan')">+ Objetivo</button>`:''}
     </div>
-    ${!miTipo&&!esAdmin?`<div class="card" style="background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.2);margin-bottom:10px;padding:12px 14px"><div style="font-size:12px;color:#fbbf24">⚠️ No estás asignada como terapeuta de este paciente. Contacta al administrador.</div></div>`:''}
+    ${!miTipo&&!esAdmin?`<div class="card" style="background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.2);margin-bottom:10px;padding:12px 14px"><div style="font-size:12px;color:var(--amber)">⚠️ No estás asignada como terapeuta de este paciente. Contacta al administrador.</div></div>`:''}
     ${!plFiltrado.length?'<div class="card"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Sin objetivos registrados</div></div></div>':
       plFiltrado.map(o=>{
         const sesReal=todasSes.filter(s=>s.objetivoTrabajado&&s.objetivoTrabajado===o.objetivo).length;
         const plani=o.sesionesPlani||o.frec||0;
         const pct=plani>0?Math.min(Math.round(sesReal/plani*100),100):0;
-        const colorBarra=pct>=100?'#16a34a':pct>=50?'#0e7490':'#d97706';
+        const colorBarra=pct>=100?'#52b788':pct>=50?'#f4b942':'#e8674a';
         const idx=pl.indexOf(o);
         const puedoEditar=puedeEditarPlan(o);
         return`<div class="plan-card">
@@ -1952,11 +1962,11 @@ function renderSesiones(){
 
   document.getElementById('panel-3').innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <div style="font-size:14px;font-weight:700;color:#a78bfa">${usuarioActual?.esAdmin?'Todas las sesiones':'Mis sesiones'} <span style="font-size:12px;font-weight:400;color:var(--text3)">(${ses.length})</span></div>
+      <div style="font-size:14px;font-weight:700;color:var(--teal2)">${usuarioActual?.esAdmin?'Todas las sesiones':'Mis sesiones'} <span style="font-size:12px;font-weight:400;color:var(--text3)">(${ses.length})</span></div>
       <button class="btn btn-teal" style="flex:none;padding:6px 14px;font-size:12px" onclick="abrirNuevaSesion()">+ Sesión</button>
     </div>
     <div class="card" style="margin-bottom:10px;padding:10px 14px;background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.2)">
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#fbbf24;margin-bottom:6px">Escala de puntajes (1–5)</div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--amber);margin-bottom:6px">Escala de puntajes (1–5)</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
         <div style="display:flex;align-items:center;gap:6px"><span class="score s1">1</span><span style="font-size:11px;color:var(--text2)">Sin respuesta</span></div>
         <div style="display:flex;align-items:center;gap:6px"><span class="score s2">2</span><span style="font-size:11px;color:var(--text2)">Respuesta mínima</span></div>
@@ -1976,7 +1986,7 @@ function renderSesiones(){
             <div style="display:flex;align-items:center;gap:3px">${sc(s.pi)}<span style="font-size:10px;color:var(--text3)">→</span>${sc(s.pf)}</div>
           </div>
           ${s.actividades?`<div style="font-size:11px;color:var(--text2);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:var(--radius-sm);padding:6px 8px;margin-top:4px"><span style="font-weight:600;color:rgba(255,255,255,.45)">Actividades: </span>${s.actividades}</div>`:''}
-          ${s.objetivoTrabajado?`<div style="font-size:11px;color:#93c5fd;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:var(--radius-sm);padding:6px 8px;margin-top:4px"><span style="font-weight:600">Objetivo: </span>${s.objetivoTrabajado}</div>`:''}
+          ${s.objetivoTrabajado?`<div style="font-size:11px;color:var(--amber);background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:var(--radius-sm);padding:6px 8px;margin-top:4px"><span style="font-weight:600">Objetivo: </span>${s.objetivoTrabajado}</div>`:''}
           ${s.logro?`<div style="font-size:11px;color:#e2e8f0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius-sm);padding:6px 8px;margin-top:4px"><span style="font-weight:600;color:rgba(255,255,255,.55)">Logro observado: </span>${s.logro}</div>`:''}
           ${s.recomendaciones?`<div style="font-size:11px;color:#6ee7b7;background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.18);border-radius:var(--radius-sm);padding:6px 8px;margin-top:4px"><span style="font-weight:600">Recomendaciones: </span>${s.recomendaciones}</div>`:''}
           <div class="ses-foot">
@@ -2001,19 +2011,19 @@ function renderHitos(){
   const canEdit=usuarioActual?.esAdmin;
   document.getElementById('panel-4').innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <div style="font-size:14px;font-weight:700;color:#a78bfa">Hitos consolidados <span style="font-size:12px;font-weight:400;color:var(--text3)">(${hit.length})</span></div>
+      <div style="font-size:14px;font-weight:700;color:var(--teal2)">Hitos consolidados <span style="font-size:12px;font-weight:400;color:var(--text3)">(${hit.length})</span></div>
       ${canEdit?`<button class="btn btn-teal" style="flex:none;padding:6px 14px;font-size:12px" onclick="document.getElementById('h-modal-title').textContent='Nuevo hito';document.getElementById('h-edit-idx').value='-1';openModal('modal-hito')">+ Hito</button>`:''}
     </div>
-    <div class="card" style="margin-bottom:10px;padding:12px 14px;background:rgba(74,222,128,.06);border-color:rgba(74,222,128,.2)">
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#4ade80;margin-bottom:6px">¿Qué es un hito?</div>
+    <div class="card" style="margin-bottom:10px;padding:12px 14px;background:rgba(82,183,136,.06);border-color:rgba(82,183,136,.2)">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--teal);margin-bottom:6px">¿Qué es un hito?</div>
       <div style="font-size:12px;color:rgba(180,255,200,.8);line-height:1.6">
         Un <strong>hito</strong> es una habilidad que el niño realiza de forma <strong>completamente independiente</strong> (sin apoyo del adulto) en al menos <strong>2 contextos diferentes</strong> — por ejemplo: terapia + hogar, o terapia + jardín.
       </div>
       <div style="margin-top:8px;display:flex;flex-direction:column;gap:4px">
-        <div style="font-size:11px;color:#4ade80;display:flex;align-items:flex-start;gap:6px"><span style="flex-shrink:0">✓</span><span>Se generaliza espontáneamente sin recordatorio del terapeuta</span></div>
-        <div style="font-size:11px;color:#4ade80;display:flex;align-items:flex-start;gap:6px"><span style="flex-shrink:0">✓</span><span>Verificado en sesión clínica con evidencia observable</span></div>
-        <div style="font-size:11px;color:#4ade80;display:flex;align-items:flex-start;gap:6px"><span style="flex-shrink:0">✓</span><span>Confirmado en al menos un contexto fuera de la terapia</span></div>
-        <div style="font-size:11px;color:#f87171;display:flex;align-items:flex-start;gap:6px"><span style="flex-shrink:0">✗</span><span>No es hito: logro puntual de una sesión o con apoyo del adulto</span></div>
+        <div style="font-size:11px;color:var(--teal);display:flex;align-items:flex-start;gap:6px"><span style="flex-shrink:0">✓</span><span>Se generaliza espontáneamente sin recordatorio del terapeuta</span></div>
+        <div style="font-size:11px;color:var(--teal);display:flex;align-items:flex-start;gap:6px"><span style="flex-shrink:0">✓</span><span>Verificado en sesión clínica con evidencia observable</span></div>
+        <div style="font-size:11px;color:var(--teal);display:flex;align-items:flex-start;gap:6px"><span style="flex-shrink:0">✓</span><span>Confirmado en al menos un contexto fuera de la terapia</span></div>
+        <div style="font-size:11px;color:var(--red);display:flex;align-items:flex-start;gap:6px"><span style="flex-shrink:0">✗</span><span>No es hito: logro puntual de una sesión o con apoyo del adulto</span></div>
       </div>
     </div>
     ${!hit.length?'<div class="card"><div class="empty-state"><div class="empty-icon">⭐</div><div class="empty-text">Sin hitos registrados</div></div></div>':
@@ -2160,8 +2170,8 @@ function renderResumen(){
         data:{labels:tipos.map(t=>t.tipo.replace('Terapia de ','').replace('Terapia ','').replace(' (ABA)','')),
           datasets:[{data:tipos.map(t=>t.n),backgroundColor:tipos.map(t=>TIPO_HEX[t.tipo]||'#888'),borderWidth:0,borderRadius:4}]},
         options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-          scales:{y:{beginAtZero:true,ticks:{stepSize:1,color:'rgba(255,255,255,.5)',font:{size:10}},grid:{color:'rgba(255,255,255,.06)'}},
-            x:{ticks:{color:'rgba(255,255,255,.5)',font:{size:10}},grid:{display:false}}}}});
+          scales:{y:{beginAtZero:true,ticks:{stepSize:1,color:'rgba(240,230,210,.55)',font:{size:10}},grid:{color:'rgba(82,183,136,.08)'}},
+            x:{ticks:{color:'rgba(240,230,210,.55)',font:{size:10}},grid:{display:false}}}}});
     } else {
       // Terapeuta: gráfico de progreso — sesiones realizadas vs planificadas por objetivo
       const miTipo=getMiTipoEnPaciente();
@@ -2176,13 +2186,13 @@ function renderResumen(){
       resChart=new Chart(cv,{type:'bar',
         data:{labels,
           datasets:[
-            {label:'Realizadas',data:realizadas,backgroundColor:'rgba(99,179,237,.8)',borderWidth:0,borderRadius:4},
-            {label:'Planificadas',data:planificadas,backgroundColor:'rgba(255,255,255,.12)',borderWidth:0,borderRadius:4}
+            {label:'Realizadas',data:realizadas,backgroundColor:'rgba(82,183,136,.8)',borderWidth:0,borderRadius:4},
+            {label:'Planificadas',data:planificadas,backgroundColor:'rgba(244,185,66,.2)',borderWidth:0,borderRadius:4}
           ]},
         options:{responsive:true,maintainAspectRatio:false,
-          plugins:{legend:{display:true,labels:{color:'rgba(255,255,255,.6)',font:{size:10},boxWidth:12}}},
-          scales:{y:{beginAtZero:true,ticks:{stepSize:1,color:'rgba(255,255,255,.5)',font:{size:10}},grid:{color:'rgba(255,255,255,.06)'}},
-            x:{ticks:{color:'rgba(255,255,255,.5)',font:{size:9},maxRotation:30},grid:{display:false}}}}});
+          plugins:{legend:{display:true,labels:{color:'rgba(240,230,210,.6)',font:{size:10},boxWidth:12}}},
+          scales:{y:{beginAtZero:true,ticks:{stepSize:1,color:'rgba(240,230,210,.55)',font:{size:10}},grid:{color:'rgba(82,183,136,.08)'}},
+            x:{ticks:{color:'rgba(240,230,210,.55)',font:{size:9},maxRotation:30},grid:{display:false}}}}});
     }
   },100);
 }
@@ -2895,7 +2905,7 @@ function renderAnalisis(){
 
   // ── Renderizar ───────────────────────────────────────────────────
   panel.innerHTML = `
-    <div style="font-size:14px;font-weight:700;color:#a78bfa;margin-bottom:12px">Análisis de objetivos terapéuticos</div>
+    <div style="font-size:14px;font-weight:700;color:var(--coral);margin-bottom:12px">Análisis de objetivos terapéuticos</div>
 
     <!-- Métricas globales -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
@@ -2923,7 +2933,7 @@ function renderAnalisis(){
 
     <!-- KPIs clínicos -->
     ${(promedioSesParaLogro||eficiencia!==null)?`
-    <div class="card" style="margin-bottom:14px;background:rgba(74,222,128,.06);border-color:rgba(74,222,128,.2)">
+    <div class="card" style="margin-bottom:14px;background:rgba(82,183,136,.06);border-color:rgba(82,183,136,.2)">
       <div class="card-title" style="color:#15803d">Indicadores clínicos</div>
       <div style="display:flex;flex-direction:column;gap:8px">
         ${promedioSesParaLogro!==null?`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #bbf7d0">
@@ -2931,7 +2941,7 @@ function renderAnalisis(){
           <div style="font-size:28px;font-weight:700;color:#15803d">${promedioSesParaLogro}</div>
         </div>`:''}
         ${eficiencia!==null?`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0">
-          <div><div style="font-size:13px;font-weight:500">Eficiencia del plan</div><div style="font-size:11px;color:#4ade80">Objetivos logrados dentro de las sesiones planificadas</div></div>
+          <div><div style="font-size:13px;font-weight:500">Eficiencia del plan</div><div style="font-size:11px;color:var(--teal)">Objetivos logrados dentro de las sesiones planificadas</div></div>
           <div style="font-size:28px;font-weight:700;color:${eficiencia>=70?'#16a34a':eficiencia>=40?'#0e7490':'#dc2626'}">${eficiencia}%</div>
         </div>`:''}
       </div>
@@ -2962,7 +2972,7 @@ function renderAnalisis(){
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px">
           <div style="background:var(--sand);border-radius:var(--radius-sm);padding:7px 10px;text-align:center">
             <div style="font-size:10px;color:var(--text3)">Sesiones realizadas</div>
-            <div style="font-size:18px;font-weight:700;color:#a78bfa">${d.sesRealizadas}</div>
+            <div style="font-size:18px;font-weight:700;color:var(--teal2)">${d.sesRealizadas}</div>
             ${d.sesPlani>0?`<div style="font-size:10px;color:var(--text3)">de ${d.sesPlani} plan.</div>`:'<div style="font-size:10px;color:var(--text3)">sin planificar</div>'}
           </div>
           <div style="background:var(--sand);border-radius:var(--radius-sm);padding:7px 10px;text-align:center">
@@ -2998,7 +3008,7 @@ function renderAnalisis(){
         <!-- Recomendación clínica -->
         ${d.agotado?`<div style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-radius:var(--radius-sm);padding:7px 10px;margin-top:4px;font-size:11px;color:#fca5a5">
           <strong>Acción sugerida:</strong> Reprogramar este objetivo. El puntaje promedio (${d.pfPromedio.toFixed(1)}) no alcanzó el umbral de logro (4.0) luego de ${d.sesRealizadas} sesiones. Considera ajustar la metodología o el número de sesiones.
-        </div>`:d.logrado?`<div style="background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.18);border-radius:var(--radius-sm);padding:7px 10px;margin-top:4px;font-size:11px;color:#4ade80">
+        </div>`:d.logrado?`<div style="background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.18);border-radius:var(--radius-sm);padding:7px 10px;margin-top:4px;font-size:11px;color:var(--teal)">
           <strong>Objetivo alcanzado</strong> en ${d.sesRealizadas} sesión${d.sesRealizadas!==1?'es':''}${d.sesPlani>0&&d.sesRealizadas<d.sesPlani?` (${d.sesPlani-d.sesRealizadas} sesiones menos de lo planificado)`:''}. Listo para avanzar al siguiente objetivo.
         </div>`:''}
       </div>`;
@@ -3035,11 +3045,11 @@ function exportarSesionPDF(idx){
   .kv-key{font-size:11px;color:#8a8784;width:140px;flex-shrink:0}
   .kv-val{font-size:12px;font-weight:500}
   .score-box{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;font-weight:700;font-size:13px}
-  .s1{background:rgba(248,113,113,.1);color:#fca5a5}.s2{background:rgba(251,191,36,.25);color:#fbbf24}.s3{background:rgba(96,165,250,.08);color:#93c5fd}.s4{background:rgba(52,211,153,.07);color:#6ee7b7}.s5{background:#dcfce7;color:#14532d}
+  .s1{background:rgba(248,113,113,.1);color:#fca5a5}.s2{background:rgba(251,191,36,.25);color:var(--amber)}.s3{background:rgba(96,165,250,.08);color:var(--amber)}.s4{background:rgba(52,211,153,.07);color:#6ee7b7}.s5{background:#dcfce7;color:#14532d}
   .text-block{background:#f9f9f6;border-radius:6px;padding:8px 10px;font-size:12px;line-height:1.6;color:#1a1917}
   .rec-block{background:rgba(52,211,153,.07);border-radius:6px;padding:8px 10px;font-size:12px;line-height:1.6;color:#064e3b}
   .leyenda{margin-top:20px;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;background:rgba(251,191,36,.06)}
-  .leyenda-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fbbf24;margin-bottom:6px}
+  .leyenda-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--amber);margin-bottom:6px}
   .leyenda-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:11px;color:#1a1917}
   .footer{margin-top:24px;font-size:10px;color:#8a8784;border-top:1px solid #ece6d8;padding-top:10px;text-align:center}
   @media print{body{padding:16px}}
@@ -3079,7 +3089,7 @@ function exportarSesionPDF(idx){
   <div class="kv"><div class="kv-key">Reacción del niño</div><div class="kv-val">${s.reaccion||'—'}</div></div>
   <div class="kv"><div class="kv-key">Puntaje inicio</div><div class="kv-val"><span class="score-box s${Math.min(Math.max(+s.pi||1,1),5)}">${s.pi||1}</span> &nbsp;${puntajes[+s.pi||1]||''}</div></div>
   <div class="kv"><div class="kv-key">Puntaje final</div><div class="kv-val"><span class="score-box s${Math.min(Math.max(+s.pf||1,1),5)}">${s.pf||1}</span> &nbsp;${puntajes[+s.pf||1]||''}</div></div>
-  ${s.objetivoTrabajado?`<div class="kv"><div class="kv-key">Objetivo trabajado</div><div class="kv-val" style="color:#93c5fd">${s.objetivoTrabajado}</div></div>`:''}
+  ${s.objetivoTrabajado?`<div class="kv"><div class="kv-key">Objetivo trabajado</div><div class="kv-val" style="color:var(--amber)">${s.objetivoTrabajado}</div></div>`:''}
 </div>
 
 ${s.actividades?`<div class="section"><div class="section-title">Actividades y técnicas realizadas</div><div class="text-block">${s.actividades}</div></div>`:''}
@@ -3270,7 +3280,7 @@ function renderCalendario(){
       </div>`;
     }
     calendarios+=`<div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:14px;margin-bottom:14px;animation:calFadeIn .4s ease">
-      <div style="font-size:13px;font-weight:700;color:#a78bfa;margin-bottom:10px;text-align:center">${meses[month]} ${year}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--coral);margin-bottom:10px;text-align:center">${meses[month]} ${year}</div>
       <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px">
         ${diasSem.map(d=>`<div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.3);text-align:center;padding:2px 0;text-transform:uppercase">${d}</div>`).join('')}
       </div>
@@ -3287,7 +3297,7 @@ function renderCalendario(){
   document.getElementById('panel-7').innerHTML=`
     <style>@keyframes calFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}</style>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <div style="font-size:14px;font-weight:700;color:#a78bfa">📅 Calendario de asistencia</div>
+      <div style="font-size:14px;font-weight:700;color:var(--teal2)">📅 Calendario de asistencia</div>
       <span style="font-size:11px;color:var(--text3)">${ses.length} sesiones</span>
     </div>
     <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:12px;margin-bottom:14px">
@@ -3485,10 +3495,10 @@ function abrirNotificaciones(){
           <div style="font-size:10px;color:var(--text3);flex-shrink:0">${n.fecha} ${n.hora}</div>
         </div>
         <div style="font-size:12px;color:var(--text2);margin-top:4px">
-          <strong>${n.accion}</strong> un objetivo en <strong style="color:#a78bfa">${n.paciente}</strong>
+          <strong>${n.accion}</strong> un objetivo en <strong style="color:var(--teal2)">${n.paciente}</strong>
         </div>
         <div style="font-size:11px;color:var(--text3);margin-top:3px;font-style:italic">"${n.objetivo}"</div>
-        ${!n.leida?`<div style="margin-top:6px"><span style="font-size:10px;background:rgba(167,139,250,.2);color:#c4b5fd;padding:2px 8px;border-radius:20px;font-weight:600">Nueva</span></div>`:''}
+        ${!n.leida?`<div style="margin-top:6px"><span style="font-size:10px;background:rgba(167,139,250,.2);color:var(--teal2);padding:2px 8px;border-radius:20px;font-weight:600">Nueva</span></div>`:''}
       </div>`;
     }).join('');
     // Marcar todas como leídas al abrir
