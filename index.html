@@ -70,6 +70,41 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
   pointer-events:none;z-index:0
 }
 
+/* ── ILUSTRACIONES DECORATIVAS ───────────────────────────────── */
+.scene-deco{
+  position:absolute !important;
+  pointer-events:none !important;
+  z-index:0 !important;
+  display:block !important;
+  flex:none !important;
+  overflow:hidden !important;
+}
+.scene-deco > svg{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  max-width:100% !important;
+  max-height:100% !important;
+}
+.deco-top-left{top:70px;left:6px;width:75px !important;height:90px !important;opacity:.22}
+.deco-top-right{top:70px;right:6px;width:75px !important;height:90px !important;opacity:.22}
+.deco-bottom-left{bottom:90px;left:6px;width:90px !important;height:100px !important;opacity:.18}
+.deco-bottom-right{bottom:90px;right:6px;width:90px !important;height:100px !important;opacity:.2}
+.deco-float{animation:decoFloat 6s ease-in-out infinite}
+.deco-float-2{animation:decoFloat 8s ease-in-out infinite reverse}
+@keyframes decoFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+
+/* Cabecera ilustrada */
+.scene-header{
+  position:relative;height:100px;margin:8px 14px 4px;border-radius:var(--radius);
+  background:linear-gradient(135deg,rgba(82,183,136,.12),rgba(244,132,95,.08));
+  border:1px solid rgba(82,183,136,.18);overflow:hidden;flex-shrink:0;
+  box-shadow:inset 0 -20px 40px -20px rgba(0,20,10,.4)
+}
+.scene-header svg{position:absolute;inset:0;width:100%;height:100%}
+.scene-header-title{position:absolute;left:14px;bottom:14px;font-size:13px;font-weight:600;color:var(--text);z-index:2;text-shadow:0 1px 4px rgba(0,0,0,.4)}
+.scene-header-sub{position:absolute;left:14px;bottom:-2px;font-size:10px;color:var(--text3);z-index:2;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+
 /* ── LOGIN ────────────────────────────────────────────────────── */
 #screen-login{
   background:radial-gradient(ellipse at 50% 100%,#1a3d22 0%,#0a1e0e 50%,#040b05 100%);
@@ -467,7 +502,7 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 
 <!-- LISTA PACIENTES -->
 <div class="screen active" id="screen-pacientes">
-  <div class="scene-deco deco-top-right deco-float"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <div class="scene-deco deco-top-right deco-float" style="position:absolute;top:70px;right:6px;width:75px;height:90px;z-index:0;pointer-events:none;overflow:hidden"><svg width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="50" cy="50" rx="2" ry="18" fill="#3d2817"/>
   <path d="M 48 40 Q 25 25 18 38 Q 15 48 25 55 Q 35 58 48 50 Z" fill="#f4845f" opacity=".85"/>
   <path d="M 52 40 Q 75 25 82 38 Q 85 48 75 55 Q 65 58 52 50 Z" fill="#f4b942" opacity=".85"/>
@@ -476,7 +511,7 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
   <circle cx="30" cy="42" r="2" fill="white" opacity=".6"/>
   <circle cx="70" cy="42" r="2" fill="white" opacity=".6"/>
 </svg></div>
-  <div class="scene-deco deco-bottom-left deco-float-2"><svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+  <div class="scene-deco deco-bottom-left deco-float-2" style="position:absolute;bottom:90px;left:6px;width:90px;height:100px;z-index:0;pointer-events:none;overflow:hidden"><svg width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
   <path d="M 30 90 Q 25 60 40 40 Q 50 30 55 45 Q 50 65 35 85 Z" fill="#52b788" opacity=".75"/>
   <path d="M 32 85 L 50 50" stroke="#2d9e6a" stroke-width="1" fill="none"/>
   <path d="M 60 100 Q 55 70 70 50 Q 80 40 85 55 Q 80 75 65 95 Z" fill="#74c69d" opacity=".7"/>
@@ -719,7 +754,7 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 
 <!-- DIRECTORIO DE TERAPEUTAS (solo admin) -->
 <div class="screen" id="screen-directorio">
-  <div class="scene-deco deco-bottom-right deco-float"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <div class="scene-deco deco-bottom-right deco-float" style="position:absolute;bottom:90px;right:6px;width:90px;height:100px;z-index:0;pointer-events:none;overflow:hidden"><svg width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
   <circle cx="50" cy="35" r="10" fill="#f4845f" opacity=".7"/>
   <circle cx="35" cy="45" r="10" fill="#f4b942" opacity=".7"/>
   <circle cx="65" cy="45" r="10" fill="#e8674a" opacity=".7"/>
@@ -745,7 +780,7 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
 
 <!-- Screen Usuarios -->
 <div class="screen" id="screen-usuarios">
-  <div class="scene-deco deco-top-right deco-float-2"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <div class="scene-deco deco-top-right deco-float-2" style="position:absolute;top:70px;right:6px;width:75px;height:90px;z-index:0;pointer-events:none;overflow:hidden"><svg width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
   <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(82,183,136,.3)" stroke-width="1" stroke-dasharray="3,3"/>
   <path d="M 30 30 L 45 30 Q 50 30 50 35 Q 50 40 55 40 L 55 50 L 45 50 Q 40 50 40 45 Q 40 40 35 40 L 30 40 Z" fill="#f4845f" opacity=".7"/>
   <path d="M 55 30 L 70 30 L 70 45 Q 70 50 65 50 Q 60 50 60 55 L 60 40 Q 60 35 55 35 Z" fill="#52b788" opacity=".7"/>
