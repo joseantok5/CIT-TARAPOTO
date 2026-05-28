@@ -1830,6 +1830,10 @@ function onTipoSesionChange(){
   const tipo=document.getElementById('s-tipo').value;
   poblarObjetivosPlan(tipo);
   const picker=document.getElementById('ter-picker');
+  if(!usuarioActual?.esAdmin){
+    // Terapeuta: solo su chip, ya está seteado en abrirNuevaSesion
+    return;
+  }
   const eq=getEquipoLista();
   const terActual=document.getElementById('s-ter').value;
   const chips=[{nombre:'Yo mismo'},...eq.map(e=>({nombre:e.nombre}))];
@@ -1870,9 +1874,22 @@ function abrirNuevaSesion(){
   updateSesDomVisibility('');
   const eq=getEquipoLista();
   const picker=document.getElementById('ter-picker');
-  picker.innerHTML=[{nombre:'Yo mismo'},...eq].map((c,i)=>
-    `<div class="ter-chip${i===0?' selected':''}" onclick="selTer(this,'${c.nombre==='Yo mismo'?'':c.nombre}')">${c.nombre}</div>`
-  ).join('');
+  if(usuarioActual?.esAdmin){
+    // Admin ve todos los terapeutas del equipo
+    picker.innerHTML=[{nombre:'Yo mismo'},...eq].map((c,i)=>
+      `<div class="ter-chip${i===0?' selected':''}" onclick="selTer(this,'${c.nombre==='Yo mismo'?'':c.nombre}')">${c.nombre}</div>`
+    ).join('');
+  } else {
+    // Terapeuta solo se ve a sí mismo
+    const miNombre = usuarioActual?.nombre || usuarioActual?.email?.split('@')[0] || 'Yo';
+    // Buscar nombre en el equipo por email
+    const enEquipo = Object.values(leerEquipoLimpio(pacienteActivo)).find(e=>
+      e.email && e.email.toLowerCase()===usuarioActual?.email?.toLowerCase()
+    );
+    const nombre = enEquipo?.nombre || miNombre;
+    document.getElementById('s-ter').value = nombre;
+    picker.innerHTML=`<div class="ter-chip selected" onclick="selTer(this,'${nombre}')">${nombre}</div>`;
+  }
   openModal('modal-sesion');
 }
 
@@ -2216,10 +2233,15 @@ function abrirNuevoPaciente(){
   document.getElementById('np-btn-guardar').textContent = 'Crear paciente';
   document.getElementById('np-edit-id').value = '';
   document.getElementById('np-estado-wrap').style.display = 'none';
-  ['np-nombre','np-hc','np-dx','np-inst','np-grado'].forEach(i=>document.getElementById(i).value='');
+  ['np-nombre','np-hc','np-inst','np-grado'].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=''; });
   document.getElementById('np-fnac').value='';
   document.getElementById('np-genero').selectedIndex=0;
-  document.getElementById('np-nivel').selectedIndex=0;
+  // Reset dx y disparar onDxChange para poblar niveles
+  const dxSel=document.getElementById('np-dx');
+  if(dxSel){ dxSel.value=''; }
+  const dxOtroWrap=document.getElementById('np-dx-otro-wrap');
+  if(dxOtroWrap) dxOtroWrap.style.display='none';
+  onDxChange();
   document.getElementById('np-foto-preview').innerHTML='📷';
   document.getElementById('np-foto-input').value='';
   _npFotoFile = null;
@@ -2683,10 +2705,24 @@ function onDxChange(){
   if(otroWrap) otroWrap.style.display = dx==='Otro'?'block':'none';
   const nivSel = document.getElementById('np-nivel');
   const nivLabel = document.getElementById('np-nivel-label');
+  const nivWrap = document.getElementById('np-nivel-wrap');
   if(nivSel){
     const niveles = NIVELES_POR_DX[dx]||[];
-    nivSel.innerHTML = '<option value="">Seleccionar</option>' + niveles.map(n=>`<option>${n}</option>`).join('');
-    if(nivLabel) nivLabel.textContent = dx.startsWith('Parálisis')?'Nivel GMFCS':'Nivel de severidad';
+    if(!dx){
+      nivSel.innerHTML = '<option value="">— Selecciona un diagnóstico primero —</option>';
+      if(nivWrap) nivWrap.style.opacity='0.4';
+    } else if(!niveles.length){
+      nivSel.innerHTML = '<option value="">— Sin niveles definidos —</option>';
+      if(nivWrap) nivWrap.style.opacity='0.4';
+    } else {
+      nivSel.innerHTML = '<option value="">Seleccionar</option>' + niveles.map(n=>`<option>${n}</option>`).join('');
+      if(nivWrap) nivWrap.style.opacity='1';
+    }
+    if(nivLabel){
+      if(dx.startsWith('Parálisis')) nivLabel.textContent='Nivel GMFCS';
+      else if(dx.startsWith('Discapacidad')) nivLabel.textContent='Nivel de discapacidad intelectual';
+      else nivLabel.textContent='Nivel de severidad';
+    }
   }
 }
 
