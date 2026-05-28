@@ -911,8 +911,10 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
       </div>
       <input id="s-ter" type="text" placeholder="O escribe el nombre manualmente" style="margin-top:6px">
     </div>
-    <div class="fg"><label>Dominio Denver</label>
+    <div class="fg" id="s-dom-wrap">
+      <label>Dominio Denver</label>
       <select id="s-dom">
+        <option value="">— No aplica —</option>
         <option>Com. Expresiva</option><option>Com. Receptiva</option><option>Habilidades Sociales</option>
         <option>Imitación</option><option>Cognición y Juego</option><option>Motricidad Fina</option>
         <option>Motricidad Gruesa</option><option>Conducta Adaptativa</option>
@@ -1046,9 +1048,26 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
       </div>
       <div class="fg"><label>Terapeuta</label><input id="p-ter" type="text"></div>
     </div>
+    <div class="fg">
+      <label>Diagnóstico asociado</label>
+      <select id="p-diag" onchange="onPlanDiagChange()">
+        <option value="">— Usar diagnóstico del paciente —</option>
+        <option value="TEA — Trastorno del Espectro Autista">TEA — Trastorno del Espectro Autista</option>
+        <option value="TDAH — Trastorno por Déficit de Atención e Hiperactividad">TDAH</option>
+        <option value="Retraso Psicomotor">Retraso Psicomotor</option>
+        <option value="Retraso del Habla y/o Lenguaje">Retraso del Habla y/o Lenguaje</option>
+        <option value="TOD — Trastorno Oposicionista Desafiante">TOD</option>
+        <option value="Discapacidad Intelectual">Discapacidad Intelectual</option>
+        <option value="Parálisis Cerebral">Parálisis Cerebral</option>
+        <option value="Trastorno del Procesamiento Sensorial">Trastorno del Procesamiento Sensorial</option>
+        <option value="Otro">Otro</option>
+      </select>
+    </div>
     <div class="form-row">
-      <div class="fg"><label>Dominio Denver</label>
+      <div class="fg" id="p-dom-wrap">
+        <label>Dominio Denver</label>
         <select id="p-dom">
+          <option value="">— No aplica —</option>
           <option>Com. Expresiva</option><option>Com. Receptiva</option><option>Habilidades Sociales</option>
           <option>Imitación</option><option>Cognición y Juego</option><option>Motricidad Fina</option>
           <option>Motricidad Gruesa</option><option>Conducta Adaptativa</option>
@@ -1076,7 +1095,7 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
     <div style="display:flex;flex-direction:column;gap:8px">
       <button class="btn btn-primary" onclick="closeModal(&#39;modal-fab-pac&#39;);abrirNuevaSesion()" style="padding:14px">Nueva sesión</button>
       <button class="btn" id="fab-hito-btn" onclick="closeModal('modal-fab-pac');document.getElementById('h-modal-title').textContent='Nuevo hito';document.getElementById('h-edit-idx').value='-1';openModal('modal-hito')" style="padding:14px">Nuevo hito</button>
-      <button class="btn" id="fab-plan-btn" onclick="closeModal('modal-fab-pac');document.getElementById('p-modal-title').textContent='Nuevo objetivo terapéutico';document.getElementById('p-edit-idx').value='-1';openModal('modal-plan')" style="padding:14px">Nuevo objetivo de plan</button>
+      <button class="btn" id="fab-plan-btn" onclick="closeModal('modal-fab-pac');document.getElementById('p-modal-title').textContent='Nuevo objetivo terapéutico';document.getElementById('p-edit-idx').value='-1';document.getElementById('p-diag').value='';onPlanDiagChange();openModal('modal-plan')" style="padding:14px">Nuevo objetivo de plan</button>
       <button class="btn" id="fab-ter-btn" onclick="closeModal(&#39;modal-fab-pac&#39;);abrirNuevoTerapeuta()" style="padding:14px">Agregar terapeuta</button>
       <button class="btn" onclick="closeModal(&#39;modal-fab-pac&#39;)" style="padding:12px;color:var(--text3)">Cancelar</button>
     </div>
@@ -1753,7 +1772,7 @@ function renderPlan(){
       <div style="font-size:14px;font-weight:700;color:#a78bfa">
         ${esAdmin?'Plan terapéutico completo':`Mi plan — ${miTipo||'Sin especialidad asignada'}`}
       </div>
-      ${puedeAgregar?`<button class="btn btn-teal" style="flex:none;padding:6px 14px;font-size:12px" onclick="document.getElementById('p-modal-title').textContent='Nuevo objetivo terapéutico';document.getElementById('p-edit-idx').value='-1';openModal('modal-plan')">+ Objetivo</button>`:''}
+      ${puedeAgregar?`<button class="btn btn-teal" style="flex:none;padding:6px 14px;font-size:12px" onclick="document.getElementById('p-modal-title').textContent='Nuevo objetivo terapéutico';document.getElementById('p-edit-idx').value='-1';document.getElementById('p-diag').value='';onPlanDiagChange();openModal('modal-plan')">+ Objetivo</button>`:''}
     </div>
     ${!miTipo&&!esAdmin?`<div class="card" style="background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.2);margin-bottom:10px;padding:12px 14px"><div style="font-size:12px;color:#fbbf24">⚠️ No estás asignada como terapeuta de este paciente. Contacta al administrador.</div></div>`:''}
     ${!plFiltrado.length?'<div class="card"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Sin objetivos registrados</div></div></div>':
@@ -1772,7 +1791,7 @@ function renderPlan(){
               <button class="btn-del" onclick="eliminarObjetivoPlan(${idx})" style="font-size:10px;padding:3px 8px" title="Eliminar">🗑</button>
             </div>`:''}
           </div>
-          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">${tag(o.tipo)}<span class="tag t-gray">${o.dominio}</span><span class="tag t-navy">${o.nivel}</span></div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">${tag(o.tipo)}${o.diagnostico&&o.diagnostico!==pacientes[pacienteActivo]?.dx?`<span class="tag t-amber" style="font-size:9px">${o.diagnostico.split('—')[0].trim()}</span>`:''}<span class="tag t-gray">${o.dominio&&esDxTEA(o.diagnostico)?o.dominio:''}</span><span class="tag t-navy">${o.nivel}</span></div>
           ${plani>0?`<div style="margin-bottom:4px">
             <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
               <span style="color:var(--text3)">Progreso: ${sesReal} de ${plani} sesiones planificadas</span>
@@ -1790,16 +1809,22 @@ function onObjetivoSelChange(){
   const sel=document.getElementById('s-objetivo-sel');
   const val=sel.value;
   if(val) document.getElementById('s-objetivo').value=val;
+  // Buscar diagnóstico del objetivo seleccionado en el plan
+  const pl=arrOf(pacientes[pacienteActivo]?.plan);
+  const obj=pl.find(o=>o.objetivo===val);
+  const diagObj=obj?.diagnostico||'';
+  updateSesDomVisibility(diagObj);
 }
 
 function poblarObjetivosPlan(tipoFiltro){
   const sel=document.getElementById('s-objetivo-sel');
   if(!sel) return;
   const pl=arrOf(pacientes[pacienteActivo]?.plan);
-  // Filtrar por tipo si se seleccionó uno
   const filtrados=tipoFiltro ? pl.filter(o=>o.tipo===tipoFiltro) : pl;
   sel.innerHTML='<option value="">— Seleccionar del plan —</option>'+
-    filtrados.map(o=>`<option value="${o.objetivo.replace(/"/g,'&quot;')}">${o.tipo} · ${o.objetivo.substring(0,60)}${o.objetivo.length>60?'...':''}</option>`).join('');
+    filtrados.map(o=>`<option value="${o.objetivo.replace(/"/g,'&quot;')}" data-diag="${o.diagnostico||''}">${o.tipo} · ${o.objetivo.substring(0,60)}${o.objetivo.length>60?'...':''}</option>`).join('');
+  // Init visibility based on patient dx
+  updateSesDomVisibility('');
 }
 function onTipoSesionChange(){
   const tipo=document.getElementById('s-tipo').value;
@@ -1841,6 +1866,8 @@ function abrirNuevaSesion(){
   poblarObjetivosPlan('');
   document.getElementById('s-reac').selectedIndex=0;
   document.getElementById('s-dom').selectedIndex=0;
+  // Init domain visibility based on patient dx
+  updateSesDomVisibility('');
   const eq=getEquipoLista();
   const picker=document.getElementById('ter-picker');
   picker.innerHTML=[{nombre:'Yo mismo'},...eq].map((c,i)=>
@@ -1866,9 +1893,13 @@ function editarSesion(idx){
   poblarObjetivosPlan(s.tipo||'');
   document.getElementById('s-objetivo').value=s.objetivoTrabajado||'';
   document.getElementById('s-objetivo-sel').value='';
-  // Set dominio
+  // Set dominio y visibilidad
   const domSel=document.getElementById('s-dom');
   for(let i=0;i<domSel.options.length;i++){if(domSel.options[i].value===s.dominio){domSel.selectedIndex=i;break;}}
+  // Determinar dx del objetivo para mostrar/ocultar dominio
+  const pl=arrOf(pacientes[pacienteActivo]?.plan);
+  const objPlan=pl.find(o=>o.objetivo===s.objetivoTrabajado);
+  updateSesDomVisibility(objPlan?.diagnostico||'');
   // Set reaccion
   const reacSel=document.getElementById('s-reac');
   for(let i=0;i<reacSel.options.length;i++){if(reacSel.options[i].value===s.reaccion){reacSel.selectedIndex=i;break;}}
@@ -2505,6 +2536,7 @@ function guardarPlan(){
   const editIdx=parseInt(document.getElementById('p-edit-idx').value);
   const entrada={
     tipo,
+    diagnostico: (()=>{ const v=document.getElementById('p-diag').value; return v||pacientes[pacienteActivo]?.dx||''; })(),
     terapeuta:document.getElementById('p-ter').value||getTerapeutasPac()[tipo]||'—',
     dominio:document.getElementById('p-dom').value,
     objetivo:obj,
@@ -2555,6 +2587,11 @@ function editarObjetivoPlan(idx){
   document.getElementById('p-obj').value=o.objetivo||'';
   document.getElementById('p-sesiones').value=o.sesionesPlani||'';
   document.getElementById('p-nivel').value=o.nivel||'Nivel 1';
+  // Diagnóstico asociado
+  const diagSel=document.getElementById('p-diag');
+  if(diagSel){ diagSel.value=o.diagnostico||''; }
+  onPlanDiagChange();
+  // Dominio
   const domSel=document.getElementById('p-dom');
   for(let i=0;i<domSel.options.length;i++){if(domSel.options[i].value===o.dominio||domSel.options[i].text===o.dominio){domSel.selectedIndex=i;break;}}
   openModal('modal-plan');
@@ -2657,6 +2694,51 @@ function onAbrirPacienteSelects(){
   // Rebuild therapy selects with suggested therapies for current patient
   ['s-tipo','h-tipo','p-tipo'].forEach(id=>buildTerapiaOptions(id));
 }
+
+// ── DIAGNÓSTICO EN PLAN / DOMINIO CONDICIONAL ─────────────────────
+function esDxTEA(dx){
+  return dx && (dx.startsWith('TEA') || dx.includes('Espectro Autista'));
+}
+
+function onPlanDiagChange(){
+  const dx = document.getElementById('p-diag').value;
+  const pac = pacientes[pacienteActivo];
+  // Si no seleccionó nada, usar el dx del paciente
+  const dxEfectivo = dx || pac?.dx || '';
+  const wrap = document.getElementById('p-dom-wrap');
+  if(wrap){
+    if(esDxTEA(dxEfectivo)){
+      wrap.style.opacity='1'; wrap.style.pointerEvents='';
+      wrap.querySelector('select').disabled=false;
+      wrap.querySelector('label').textContent='Dominio Denver';
+    } else {
+      wrap.style.opacity='0.35'; wrap.style.pointerEvents='none';
+      wrap.querySelector('select').disabled=true;
+      wrap.querySelector('select').value='';
+      wrap.querySelector('label').textContent='Dominio Denver (solo TEA)';
+    }
+  }
+}
+
+function updateSesDomVisibility(diagObjetivo){
+  const wrap = document.getElementById('s-dom-wrap');
+  if(!wrap) return;
+  const pac = pacientes[pacienteActivo];
+  const dxBase = pac?.dx || '';
+  // Usar diagnóstico del objetivo si existe, sino el del paciente
+  const dxEfectivo = diagObjetivo || dxBase;
+  if(esDxTEA(dxEfectivo)){
+    wrap.style.opacity='1'; wrap.style.pointerEvents='';
+    wrap.querySelector('select').disabled=false;
+    wrap.querySelector('label').textContent='Dominio Denver';
+  } else {
+    wrap.style.opacity='0.35'; wrap.style.pointerEvents='none';
+    wrap.querySelector('select').disabled=true;
+    wrap.querySelector('select').value='';
+    wrap.querySelector('label').textContent='Dominio Denver (solo TEA)';
+  }
+}
+
 
 function leerEquipoLimpio(pacId){
   // Lee el equipo sin importar si está en formato array u objeto, y devuelve siempre un objeto limpio
