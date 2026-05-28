@@ -786,13 +786,34 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
     </div>
     <div class="form-row">
       <div class="fg"><label>Género</label><select id="np-genero"><option value="">Seleccionar</option><option>Masculino</option><option>Femenino</option><option>Otro</option></select></div>
-      <div class="fg"><label>Nivel TEA</label><select id="np-nivel"><option value="">Seleccionar</option><option>Nivel 1 — Requiere apoyo</option><option>Nivel 2 — Requiere apoyo sustancial</option><option>Nivel 3 — Requiere apoyo muy sustancial</option></select></div>
+      <div class="fg" id="np-nivel-wrap">
+        <label id="np-nivel-label">Nivel de severidad</label>
+        <select id="np-nivel"><option value="">Seleccionar</option></select>
+      </div>
     </div>
     <div class="form-row">
       <div class="fg"><label>Institución educativa</label><input id="np-inst" type="text"></div>
       <div class="fg"><label>Grado</label><input id="np-grado" type="text" placeholder="4°"></div>
     </div>
-    <div class="fg"><label>Diagnóstico principal</label><input id="np-dx" type="text" placeholder="TEA — F84.0 (CIE-11)"></div>
+    <div class="fg">
+      <label>Diagnóstico principal</label>
+      <select id="np-dx" onchange="onDxChange()">
+        <option value="">Seleccionar diagnóstico</option>
+        <option value="TEA — Trastorno del Espectro Autista">TEA — Trastorno del Espectro Autista</option>
+        <option value="TDAH — Trastorno por Déficit de Atención e Hiperactividad">TDAH — Déficit de Atención e Hiperactividad</option>
+        <option value="Retraso Psicomotor">Retraso Psicomotor</option>
+        <option value="Retraso del Habla y/o Lenguaje">Retraso del Habla y/o Lenguaje</option>
+        <option value="TOD — Trastorno Oposicionista Desafiante">TOD — Trastorno Oposicionista Desafiante</option>
+        <option value="Discapacidad Intelectual">Discapacidad Intelectual</option>
+        <option value="Parálisis Cerebral">Parálisis Cerebral</option>
+        <option value="Trastorno del Procesamiento Sensorial">Trastorno del Procesamiento Sensorial</option>
+        <option value="Otro">Otro (especificar abajo)</option>
+      </select>
+    </div>
+    <div class="fg" id="np-dx-otro-wrap" style="display:none">
+      <label>Especificar diagnóstico</label>
+      <input id="np-dx-otro" type="text" placeholder="Describe el diagnóstico...">
+    </div>
     <div class="form-row">
       <div class="fg"><label>Diagnósticos secundarios</label><input id="np-dx2" type="text" placeholder="Ej: TDAH, Ansiedad..."></div>
     </div>
@@ -871,14 +892,17 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
       <div class="fg"><label>Minutos</label><input id="s-min" type="number" value="30"></div>
     </div>
     <div class="fg"><label>Tipo de terapia</label>
-      <select id="s-tipo" onchange="onTipoSesionChange()">
+      <div style="display:flex;gap:6px;align-items:flex-end">
+        <div style="flex:1"><select id="s-tipo" onchange="onTipoSesionChange()">
         <option value="">Seleccionar...</option>
         <option>Terapia de Lenguaje</option><option>Terapia Conductual (ABA)</option>
         <option>Terapia Ocupacional</option><option>Terapia de Integración Sensorial</option>
         <option>Psicomotricidad</option><option>Terapia de Juego</option>
         <option>Musicoterapia</option><option>Fonoaudiología</option>
         <option>Terapia Familiar</option><option>Intervención ESDM / Denver</option>
-      </select>
+      </select></div>
+        <button type="button" onclick="agregarTerapiaPersonalizada('s-tipo')" style="flex-shrink:0;padding:9px 10px;border-radius:var(--radius-sm);border:1px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit" title="Agregar terapia personalizada">+ Nueva</button>
+      </div>
     </div>
     <div class="fg">
       <label>Terapeuta — desliza para seleccionar</label>
@@ -974,13 +998,12 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
     <div class="form-row">
       <div class="fg"><label>Fecha</label><input id="h-fecha" type="text" placeholder="DD/MM/AAAA"></div>
       <div class="fg"><label>Tipo de terapia</label>
-        <select id="h-tipo" onchange="autoTer(&#39;h-tipo&#39;,&#39;h-ter&#39;)">
-          <option value="">Seleccionar...</option>
-          <option>Terapia de Lenguaje</option><option>Terapia Conductual (ABA)</option>
-          <option>Terapia Ocupacional</option><option>Terapia de Integración Sensorial</option>
-          <option>Psicomotricidad</option><option>Terapia de Juego</option>
-          <option>Musicoterapia</option><option>Fonoaudiología</option><option>Terapia Familiar</option>
-        </select>
+        <div style="display:flex;gap:6px;align-items:flex-end">
+          <select style="flex:1" id="h-tipo" onchange="autoTer(&#39;h-tipo&#39;,&#39;h-ter&#39;)">
+            <option value="">Seleccionar...</option>
+          </select>
+          <button type="button" onclick="agregarTerapiaPersonalizada(&#39;h-tipo&#39;)" style="flex-shrink:0;padding:9px 10px;border-radius:var(--radius-sm);border:1px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">+ Nueva</button>
+        </div>
       </div>
     </div>
     <div class="form-row">
@@ -1014,13 +1037,12 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;
     <input type="hidden" id="p-edit-idx" value="-1">
     <div class="form-row">
       <div class="fg"><label>Tipo de terapia</label>
-        <select id="p-tipo" onchange="autoTer(&#39;p-tipo&#39;,&#39;p-ter&#39;)">
-          <option value="">Seleccionar...</option>
-          <option>Terapia de Lenguaje</option><option>Terapia Conductual (ABA)</option>
-          <option>Terapia Ocupacional</option><option>Terapia de Integración Sensorial</option>
-          <option>Psicomotricidad</option><option>Terapia de Juego</option>
-          <option>Musicoterapia</option><option>Fonoaudiología</option><option>Terapia Familiar</option>
-        </select>
+        <div style="display:flex;gap:6px;align-items:flex-end">
+          <select style="flex:1" id="p-tipo" onchange="autoTer(&#39;p-tipo&#39;,&#39;p-ter&#39;)">
+            <option value="">Seleccionar...</option>
+          </select>
+          <button type="button" onclick="agregarTerapiaPersonalizada(&#39;p-tipo&#39;)" style="flex-shrink:0;padding:9px 10px;border-radius:var(--radius-sm);border:1px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">+ Nueva</button>
+        </div>
       </div>
       <div class="fg"><label>Terapeuta</label><input id="p-ter" type="text"></div>
     </div>
@@ -1089,19 +1111,87 @@ let dashChart   = null;
 
 // ── Constantes ────────────────────────────────────────────────────
 const TIPO_CLS = {
+  // TEA
   'Terapia de Lenguaje':'t-purple','Terapia Conductual (ABA)':'t-coral',
   'Terapia Ocupacional':'t-navy','Terapia de Integración Sensorial':'t-teal',
-  'Psicomotricidad':'t-green','Terapia de Juego':'t-amber',
-  'Musicoterapia':'t-purple','Fonoaudiología':'t-teal',
-  'Terapia Familiar':'t-gray','Intervención ESDM / Denver':'t-teal'
+  'Intervención ESDM / Denver':'t-teal',
+  // TDAH
+  'Terapia Cognitivo-Conductual':'t-amber','Psicoeducación':'t-amber',
+  'Entrenamiento en Habilidades Sociales':'t-green',
+  // Retraso Psicomotor
+  'Fisioterapia':'t-green','Psicomotricidad':'t-green','Estimulación Temprana':'t-teal',
+  // Retraso del Habla
+  'Fonoaudiología':'t-teal','Estimulación del Lenguaje':'t-purple',
+  // TOD
+  'Terapia Familiar':'t-gray','Terapia de Conducta':'t-coral','Mindfulness Infantil':'t-amber',
+  // Discapacidad Intelectual
+  'Estimulación Cognitiva':'t-navy','Terapia de Aprendizaje Adaptativo':'t-navy',
+  // Parálisis Cerebral
+  'Hidroterapia':'t-teal','Terapia de Neurodesarrollo (NDT)':'t-purple',
+  // General
+  'Terapia de Juego':'t-amber','Musicoterapia':'t-purple','Arteterapia':'t-amber',
 };
 const TIPO_HEX = {
+  // TEA
   'Terapia de Lenguaje':'#7c3aed','Terapia Conductual (ABA)':'#dc2626',
   'Terapia Ocupacional':'#1e40af','Terapia de Integración Sensorial':'#0e7490',
-  'Psicomotricidad':'#16a34a','Terapia de Juego':'#d97706',
-  'Musicoterapia':'#7c3aed','Fonoaudiología':'#0891b2',
-  'Terapia Familiar':'#6b7280','Intervención ESDM / Denver':'#0e7490'
+  'Intervención ESDM / Denver':'#0e7490',
+  // TDAH
+  'Terapia Cognitivo-Conductual':'#d97706','Psicoeducación':'#b45309',
+  'Entrenamiento en Habilidades Sociales':'#16a34a',
+  // Retraso Psicomotor
+  'Fisioterapia':'#15803d','Psicomotricidad':'#16a34a','Estimulación Temprana':'#0e7490',
+  // Retraso del Habla
+  'Fonoaudiología':'#0891b2','Estimulación del Lenguaje':'#6d28d9',
+  // TOD
+  'Terapia Familiar':'#6b7280','Terapia de Conducta':'#b91c1c','Mindfulness Infantil':'#92400e',
+  // Discapacidad Intelectual
+  'Estimulación Cognitiva':'#1d4ed8','Terapia de Aprendizaje Adaptativo':'#1e40af',
+  // Parálisis Cerebral
+  'Hidroterapia':'#0e7490','Terapia de Neurodesarrollo (NDT)':'#5b21b6',
+  // General
+  'Terapia de Juego':'#d97706','Musicoterapia':'#7c3aed','Arteterapia':'#c2410c',
 };
+
+// ── Terapias sugeridas por diagnóstico ───────────────────────────
+const TERAPIAS_POR_DX = {
+  'TEA — Trastorno del Espectro Autista': [
+    'Terapia Conductual (ABA)','Terapia de Lenguaje','Terapia Ocupacional',
+    'Terapia de Integración Sensorial','Intervención ESDM / Denver',
+    'Terapia de Juego','Musicoterapia','Terapia Familiar'
+  ],
+  'TDAH — Trastorno por Déficit de Atención e Hiperactividad': [
+    'Terapia Cognitivo-Conductual','Psicoeducación',
+    'Entrenamiento en Habilidades Sociales','Terapia Ocupacional',
+    'Terapia Familiar','Mindfulness Infantil'
+  ],
+  'Retraso Psicomotor': [
+    'Fisioterapia','Psicomotricidad','Terapia Ocupacional',
+    'Estimulación Temprana','Terapia de Lenguaje','Hidroterapia'
+  ],
+  'Retraso del Habla y/o Lenguaje': [
+    'Fonoaudiología','Terapia de Lenguaje','Estimulación del Lenguaje',
+    'Terapia Ocupacional','Musicoterapia'
+  ],
+  'TOD — Trastorno Oposicionista Desafiante': [
+    'Terapia de Conducta','Terapia Cognitivo-Conductual',
+    'Entrenamiento en Habilidades Sociales','Terapia Familiar','Mindfulness Infantil'
+  ],
+  'Discapacidad Intelectual': [
+    'Estimulación Cognitiva','Terapia de Aprendizaje Adaptativo',
+    'Terapia de Lenguaje','Terapia Ocupacional','Psicomotricidad',
+    'Estimulación Temprana','Terapia de Juego'
+  ],
+  'Parálisis Cerebral': [
+    'Fisioterapia','Terapia de Neurodesarrollo (NDT)','Terapia Ocupacional',
+    'Terapia de Lenguaje','Hidroterapia','Estimulación Temprana','Musicoterapia'
+  ],
+  'Trastorno del Procesamiento Sensorial': [
+    'Terapia de Integración Sensorial','Terapia Ocupacional',
+    'Terapia de Lenguaje','Psicomotricidad','Musicoterapia'
+  ],
+};
+
 const AV_BG  = ['rgba(96,165,250,.08)','rgba(52,211,153,.07)','#ede9fe','rgba(248,113,113,.1)','#fef3c7','#fce7f3','#e0f2fe','#dcfce7'];
 const AV_COL = ['#1e40af','#065f46','#5b21b6','#991b1b','#92400e','#9d174d','#0369a1','#14532d'];
 
@@ -1116,6 +1206,68 @@ const arrOf = o => {
   if(Array.isArray(o)) return o.filter(x=>x!=null);
   return Object.values(o).filter(x=>x!=null);
 };
+
+function getTerapiasSugeridas(pacId){
+  const p=pacientes[pacId||pacienteActivo];
+  const dx=p?.dx||'';
+  // Buscar match por inicio del diagnóstico
+  const key=Object.keys(TERAPIAS_POR_DX).find(k=>dx.startsWith(k.split('—')[0].trim())||dx.includes(k.split('—')[0].trim()));
+  const sugeridas=key?TERAPIAS_POR_DX[key]:[];
+  // Agregar terapias personalizadas guardadas en Firebase
+  const custom=arrOf(p?.terapiasCustom);
+  return [...new Set([...sugeridas,...custom])];
+}
+
+function buildTerapiaOptions(selectId, incluirCustomBtn=true, pacId=null){
+  const sel=document.getElementById(selectId);
+  if(!sel) return;
+  const current=sel.value;
+  const terapias=getTerapiasSugeridas(pacId);
+  const allTerapias=Object.keys(TIPO_HEX);
+  // Terapias no sugeridas como grupo secundario
+  const otras=allTerapias.filter(t=>!terapias.includes(t));
+  sel.innerHTML=`<option value="">Seleccionar</option>`;
+  if(terapias.length){
+    const grp=document.createElement('optgroup');
+    grp.label='✅ Sugeridas para este diagnóstico';
+    terapias.forEach(t=>{const o=new Option(t,t);grp.appendChild(o);});
+    sel.appendChild(grp);
+  }
+  if(otras.length){
+    const grp2=document.createElement('optgroup');
+    grp2.label='Otras terapias';
+    otras.forEach(t=>{const o=new Option(t,t);grp2.appendChild(o);});
+    sel.appendChild(grp2);
+  }
+  // Restaurar valor si existía
+  if(current) sel.value=current;
+}
+
+function agregarTerapiaPersonalizada(callbackSelectId){
+  const nombre=prompt('Nombre de la nueva terapia:','');
+  if(!nombre||!nombre.trim()) return;
+  const n=nombre.trim();
+  // Guardar en Firebase bajo el paciente
+  const custom=arrOf(pacientes[pacienteActivo]?.terapiasCustom);
+  if(!custom.includes(n)){
+    custom.push(n);
+    DB.child(`pacientes/${pacienteActivo}/terapiasCustom`).set(custom)
+      .then(()=>{
+        toast('Terapia "'+n+'" agregada');
+        // Reconstruir opciones
+        buildTerapiaOptions(callbackSelectId);
+        // Seleccionar la nueva
+        setTimeout(()=>{
+          const sel=document.getElementById(callbackSelectId);
+          if(sel) sel.value=n;
+        },300);
+      });
+  } else {
+    const sel=document.getElementById(callbackSelectId);
+    if(sel) sel.value=n;
+  }
+}
+
 const getMes  = f => { const M=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']; const p=f.split('/'); return p.length>=2?(M[parseInt(p[1])-1]||''):''; };
 const getAnio = f => { const p=f.split('/'); return p.length>=3?p[2].slice(0,4):''; };
 const calcEdad = fn => {
@@ -1355,6 +1507,8 @@ function abrirPaciente(id){
   document.getElementById('det-hc').textContent=p.hc||'';
   // ── Avatar en topbar ──────────────────────────────────────────
   actualizarAvatarTopbar(id);
+  // Rebuild therapy selects with suggestions for this patient
+  setTimeout(onAbrirPacienteSelects, 200);
   document.querySelectorAll('.det-tab').forEach((t,i)=>t.classList.toggle('active',i===0));
   // Limpiar TODOS los paneles antes de cargar el nuevo paciente
   document.querySelectorAll('.det-panel').forEach((el,i)=>{
@@ -1463,7 +1617,7 @@ function renderPerfil(){
       <div class="kv-row"><div class="kv-key">Fecha de nac.</div><div class="kv-val">${p.fechaNac?new Date(p.fechaNac).toLocaleDateString('es-PE',{day:'2-digit',month:'long',year:'numeric'}):'—'}</div></div>
       <div class="kv-row"><div class="kv-key">Edad</div><div class="kv-val">${calcEdad(p.fechaNac)||'—'}</div></div>
       <div class="kv-row"><div class="kv-key">Género</div><div class="kv-val">${p.genero||'—'}</div></div>
-      <div class="kv-row"><div class="kv-key">Nivel TEA</div><div class="kv-val">${p.nivelTea||'—'}</div></div>
+      <div class="kv-row"><div class="kv-key">Nivel</div><div class="kv-val">${p.nivelTea||'—'}</div></div>
       <div class="kv-row"><div class="kv-key">Diagnóstico</div><div class="kv-val">${p.dx||'—'}</div></div>
       ${p.dx2?`<div class="kv-row"><div class="kv-key">Dx. secundario</div><div class="kv-val">${p.dx2}</div></div>`:''}
       ${p.fechaDx?`<div class="kv-row"><div class="kv-key">Fecha Dx</div><div class="kv-val">${p.fechaDx}</div></div>`:''}
@@ -2082,11 +2236,22 @@ function abrirEditarPaciente(id){
   document.getElementById('np-emerg-vinculo').value = p.emergencia?.vinculo||'';
   document.getElementById('np-emerg-tel').value = p.emergencia?.tel||'';
   document.getElementById('np-emerg-obs').value = p.emergencia?.obs||'';
+  // Diagnóstico dinámico
+  const dxSel = document.getElementById('np-dx');
+  const dxOtroWrap = document.getElementById('np-dx-otro-wrap');
+  const dxOtroInp = document.getElementById('np-dx-otro');
+  const dxMatch = Array.from(dxSel.options).find(o=>o.value===p.dx);
+  if(dxMatch){ dxSel.value=p.dx; if(dxOtroWrap) dxOtroWrap.style.display='none'; }
+  else if(p.dx){ dxSel.value='Otro'; if(dxOtroWrap) dxOtroWrap.style.display='block'; if(dxOtroInp) dxOtroInp.value=p.dx; }
+  else { dxSel.value=''; }
+  onDxChange();
+  setTimeout(()=>{
+    const nivSel2=document.getElementById('np-nivel');
+    if(nivSel2&&p.nivelTea){ for(let i=0;i<nivSel2.options.length;i++){if(nivSel2.options[i].value===p.nivelTea){nivSel2.selectedIndex=i;break;}} }
+  },80);
   // Selects
   const genSel = document.getElementById('np-genero');
   for(let i=0;i<genSel.options.length;i++){ if(genSel.options[i].value===p.genero){ genSel.selectedIndex=i; break; } }
-  const nivSel = document.getElementById('np-nivel');
-  for(let i=0;i<nivSel.options.length;i++){ if(nivSel.options[i].value===p.nivelTea){ nivSel.selectedIndex=i; break; } }
   const sangreSel = document.getElementById('np-sangre');
   for(let i=0;i<sangreSel.options.length;i++){ if(sangreSel.options[i].value===p.grupoSanguineo){ sangreSel.selectedIndex=i; break; } }
   const estSel = document.getElementById('np-estado');
@@ -2128,7 +2293,7 @@ function guardarNuevoPaciente(){
     fechaNac:   document.getElementById('np-fnac').value,
     genero:     document.getElementById('np-genero').value,
     nivelTea:   document.getElementById('np-nivel').value,
-    dx:         document.getElementById('np-dx').value,
+    dx: (()=>{ const v=document.getElementById('np-dx').value; return v==='Otro'?(document.getElementById('np-dx-otro')?.value||v):v; })(),
     institucion:document.getElementById('np-inst').value,
     grado:      document.getElementById('np-grado').value,
     // Diagnóstico y evaluación
@@ -2173,7 +2338,8 @@ function guardarNuevoPaciente(){
      'np-emerg-nombre','np-emerg-vinculo','np-emerg-tel','np-emerg-obs'
     ].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=''; });
     ['np-fnac','np-fecha-dx'].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=''; });
-    ['np-genero','np-nivel','np-sangre'].forEach(i=>{ const el=document.getElementById(i); if(el) el.selectedIndex=0; });
+    ['np-genero','np-nivel','np-sangre','np-dx'].forEach(i=>{ const el=document.getElementById(i); if(el) el.selectedIndex=0; });
+    const dxOtroWrap=document.getElementById('np-dx-otro-wrap'); if(dxOtroWrap) dxOtroWrap.style.display='none';
     document.getElementById('np-foto-preview').innerHTML='📷';
     document.getElementById('np-foto-input').value='';
     document.getElementById('np-foto-progress').style.display='none';
@@ -2459,6 +2625,37 @@ function enviarNotificacion(accion, objetivo, pacienteNombre){
     leida:false
   };
   DB.child('notificaciones').push(notif);
+}
+
+// ── DIAGNÓSTICO DINÁMICO ──────────────────────────────────────────
+const NIVELES_POR_DX = {
+  'TEA — Trastorno del Espectro Autista': ['Nivel 1 — Requiere apoyo','Nivel 2 — Requiere apoyo sustancial','Nivel 3 — Requiere apoyo muy sustancial'],
+  'TDAH — Trastorno por Déficit de Atención e Hiperactividad': ['Leve','Moderado','Severo'],
+  'Retraso Psicomotor': ['Leve','Moderado','Grave'],
+  'Retraso del Habla y/o Lenguaje': ['Leve','Moderado','Grave'],
+  'TOD — Trastorno Oposicionista Desafiante': ['Leve','Moderado','Severo'],
+  'Discapacidad Intelectual': ['Leve (CI 50-69)','Moderada (CI 35-49)','Grave (CI 20-34)','Profunda (CI <20)'],
+  'Parálisis Cerebral': ['GMFCS I','GMFCS II','GMFCS III','GMFCS IV','GMFCS V'],
+  'Trastorno del Procesamiento Sensorial': ['Leve','Moderado','Severo'],
+  'Otro': ['Leve','Moderado','Grave'],
+};
+
+function onDxChange(){
+  const dx = document.getElementById('np-dx').value;
+  const otroWrap = document.getElementById('np-dx-otro-wrap');
+  if(otroWrap) otroWrap.style.display = dx==='Otro'?'block':'none';
+  const nivSel = document.getElementById('np-nivel');
+  const nivLabel = document.getElementById('np-nivel-label');
+  if(nivSel){
+    const niveles = NIVELES_POR_DX[dx]||[];
+    nivSel.innerHTML = '<option value="">Seleccionar</option>' + niveles.map(n=>`<option>${n}</option>`).join('');
+    if(nivLabel) nivLabel.textContent = dx.startsWith('Parálisis')?'Nivel GMFCS':'Nivel de severidad';
+  }
+}
+
+function onAbrirPacienteSelects(){
+  // Rebuild therapy selects with suggested therapies for current patient
+  ['s-tipo','h-tipo','p-tipo'].forEach(id=>buildTerapiaOptions(id));
 }
 
 function leerEquipoLimpio(pacId){
