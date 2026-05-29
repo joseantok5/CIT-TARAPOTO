@@ -1782,86 +1782,109 @@ function renderLista(){
     }).join('');
 }
 
-// ── VISTA BOSQUE — Cada paciente como fruta en un árbol ─────────
+// ── VISTA BOSQUE — Pacientes como frutas en un árbol grande ─────
 function renderListaBosque(lista){
-  // Distribuir frutas en el árbol según cantidad
   const N = lista.length;
+  // Distribución en grid sobre el árbol (filas de 3, 4, 3, 2)
   const posiciones = [
-    [25,30],[50,18],[75,30],
-    [15,48],[38,42],[62,42],[85,48],
-    [22,62],[45,60],[55,60],[78,62],
-    [30,76],[50,80],[70,76],
-    [40,90],[60,90]
+    // Fila superior (3 frutas en la copa alta)
+    {top:'8%', left:'30%'}, {top:'4%', left:'50%'}, {top:'8%', left:'70%'},
+    // Fila media (4 frutas)
+    {top:'25%', left:'18%'}, {top:'22%', left:'40%'}, {top:'22%', left:'60%'}, {top:'25%', left:'82%'},
+    // Fila media-baja (3)
+    {top:'42%', left:'25%'}, {top:'40%', left:'50%'}, {top:'42%', left:'75%'},
+    // Fila baja (3)
+    {top:'58%', left:'30%'}, {top:'56%', left:'50%'}, {top:'58%', left:'70%'},
+    // Suelo (más frutas caídas)
+    {top:'78%', left:'20%'}, {top:'78%', left:'50%'}, {top:'78%', left:'80%'},
   ];
 
-  const frutas = lista.slice(0, posiciones.length).map(([id,p],i)=>{
-    const [x,y] = posiciones[i];
+  const frutasHTML = lista.slice(0, posiciones.length).map(([id,p],i)=>{
+    const pos = posiciones[i];
     const bg = AV_BG[i%AV_BG.length], col = AV_COL[i%AV_COL.length];
     const estado = p.estado||'Activo';
     const ringColor = estado==='Activo'?'#74c69d':estado==='Alta'?'#c3a882':'#e8674a';
     const haveFoto = !!p.fotoURL;
+    const nombreCorto = p.nombre.split(' ')[0].substring(0,10);
     return `
-      <g class="fruta-paciente" style="cursor:pointer" onclick="abrirPaciente('${id}')">
-        <circle cx="${x}%" cy="${y}%" r="32" fill="${ringColor}" opacity=".15"/>
-        <circle cx="${x}%" cy="${y}%" r="22" fill="${ringColor}" opacity=".4"/>
-        ${haveFoto
-          ? `<defs><clipPath id="clip-${id}"><circle cx="${x}%" cy="${y}%" r="18"/></clipPath></defs>
-             <image href="${p.fotoURL}" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clip-path="url(#clip-${id})"/>
-             <circle cx="${x}%" cy="${y}%" r="18" fill="none" stroke="${ringColor}" stroke-width="2"/>`
-          : `<circle cx="${x}%" cy="${y}%" r="18" fill="${col}" stroke="${ringColor}" stroke-width="2"/>
-             <text x="${x}%" y="${y}%" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700" fill="white">${ini(p.nombre)}</text>`}
-      </g>
-      <text x="${x}%" y="${y+9}%" text-anchor="middle" font-size="9" font-weight="600" fill="#f0ede6" style="pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.7)">${p.nombre.split(' ')[0].substring(0,10)}</text>
-    `;
+      <div class="fruta-paciente" onclick="abrirPaciente('${id}')" style="position:absolute;top:${pos.top};left:${pos.left};transform:translate(-50%,-50%);cursor:pointer;text-align:center;z-index:5;transition:transform .2s">
+        <div style="width:54px;height:54px;border-radius:50%;border:3px solid ${ringColor};box-shadow:0 0 18px ${ringColor}55,0 4px 12px rgba(0,0,0,.4);overflow:hidden;background:${bg};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:${col};margin:0 auto">
+          ${haveFoto?`<img src="${p.fotoURL}" alt="${ini(p.nombre)}" style="width:100%;height:100%;object-fit:cover">`:ini(p.nombre)}
+        </div>
+        <div style="font-size:9px;font-weight:600;color:#f0ede6;margin-top:4px;text-shadow:0 1px 3px rgba(0,0,0,.9),0 0 6px rgba(0,0,0,.7);max-width:60px">${nombreCorto}</div>
+      </div>`;
   }).join('');
 
-  // Si hay más de 16, mostrar lista debajo
   const extra = N > posiciones.length ? lista.slice(posiciones.length) : [];
 
   return `
     <style>
-      .fruta-paciente:hover circle:nth-child(2){animation:fruitFloat .6s ease infinite}
-      @keyframes fruitFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+      .fruta-paciente:hover{transform:translate(-50%,-50%) scale(1.12) !important;z-index:10!important}
+      .fruta-paciente:hover > div:first-child{box-shadow:0 0 25px var(--coral),0 6px 16px rgba(0,0,0,.5)!important}
+      @keyframes leafSway{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1deg)}}
     </style>
-    <div class="card" style="padding:0;overflow:hidden;background:linear-gradient(180deg,rgba(82,183,136,.06) 0%,rgba(13,31,18,.5) 60%,rgba(82,183,136,.1) 100%);position:relative;min-height:560px;border-radius:var(--radius)">
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
+    <div class="card" style="padding:0;overflow:hidden;background:linear-gradient(180deg,rgba(82,183,136,.04) 0%,rgba(13,31,18,.5) 60%,rgba(82,183,136,.08) 100%);position:relative;height:560px;border-radius:var(--radius)">
+      <!-- Árbol de fondo (SVG con aspect ratio correcto) -->
+      <svg viewBox="0 0 400 560" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0;width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="sunBosque"><stop offset="0%" stop-color="#f4b942" stop-opacity=".55"/><stop offset="100%" stop-color="#f4b942" stop-opacity="0"/></radialGradient>
+          <linearGradient id="troncoGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#7a4a26"/>
+            <stop offset="100%" stop-color="#4a2d18"/>
+          </linearGradient>
+        </defs>
         <!-- Sol -->
-        <defs><radialGradient id="bosqueSun"><stop offset="0%" stop-color="#f4b942" stop-opacity=".5"/><stop offset="100%" stop-color="#f4b942" stop-opacity="0"/></radialGradient></defs>
-        <circle cx="88" cy="10" r="12" fill="url(#bosqueSun)"/>
-        <circle cx="88" cy="10" r="4" fill="#f4b942" opacity=".8"/>
-        <!-- Pasto -->
-        <ellipse cx="50" cy="100" rx="60" ry="10" fill="#2d9e6a" opacity=".4"/>
-        <!-- Tronco -->
-        <path d="M 47 100 Q 48 75 49 50 Q 50 25 51 5 Q 52 25 53 50 Q 54 75 53 100 Z" fill="#5c3a1e" opacity=".8"/>
-        <!-- Ramas -->
-        <path d="M 50 30 Q 30 28 18 35" stroke="#5c3a1e" stroke-width="1.5" fill="none" opacity=".7"/>
-        <path d="M 50 30 Q 70 28 82 35" stroke="#5c3a1e" stroke-width="1.5" fill="none" opacity=".7"/>
-        <path d="M 50 50 Q 35 50 25 60" stroke="#5c3a1e" stroke-width="1.5" fill="none" opacity=".7"/>
-        <path d="M 50 50 Q 65 50 75 60" stroke="#5c3a1e" stroke-width="1.5" fill="none" opacity=".7"/>
-        <path d="M 50 70 Q 40 73 32 78" stroke="#5c3a1e" stroke-width="1.2" fill="none" opacity=".7"/>
-        <path d="M 50 70 Q 60 73 68 78" stroke="#5c3a1e" stroke-width="1.2" fill="none" opacity=".7"/>
-        <!-- Copa -->
-        <ellipse cx="50" cy="20" rx="32" ry="20" fill="#52b788" opacity=".4"/>
-        <ellipse cx="22" cy="42" rx="20" ry="14" fill="#74c69d" opacity=".35"/>
-        <ellipse cx="78" cy="42" rx="20" ry="14" fill="#74c69d" opacity=".35"/>
-        <ellipse cx="50" cy="55" rx="30" ry="15" fill="#2d9e6a" opacity=".3"/>
-        <ellipse cx="28" cy="72" rx="16" ry="10" fill="#52b788" opacity=".35"/>
-        <ellipse cx="72" cy="72" rx="16" ry="10" fill="#52b788" opacity=".35"/>
-        <!-- Frutas (pacientes) -->
-        ${frutas}
+        <circle cx="350" cy="50" r="35" fill="url(#sunBosque)"/>
+        <circle cx="350" cy="50" r="14" fill="#f4b942" opacity=".85"/>
+        <!-- Suelo / pasto -->
+        <ellipse cx="200" cy="540" rx="250" ry="35" fill="#2d9e6a" opacity=".4"/>
+        <ellipse cx="200" cy="530" rx="180" ry="20" fill="#52b788" opacity=".5"/>
+        <!-- Tronco grueso -->
+        <path d="M 180 540 Q 185 450 188 350 Q 190 250 195 150 Q 200 80 200 30 Q 200 80 205 150 Q 210 250 212 350 Q 215 450 220 540 Z" fill="url(#troncoGrad)"/>
+        <!-- Textura del tronco -->
+        <path d="M 195 500 Q 200 460 200 420" stroke="#3d2817" stroke-width="1.5" fill="none" opacity=".5"/>
+        <path d="M 197 400 Q 200 360 200 320" stroke="#3d2817" stroke-width="1.5" fill="none" opacity=".5"/>
+        <path d="M 198 300 Q 200 260 200 220" stroke="#3d2817" stroke-width="1.5" fill="none" opacity=".5"/>
+        <!-- Ramas grandes -->
+        <path d="M 200 130 Q 130 110 70 100" stroke="#5c3a1e" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M 200 130 Q 270 110 330 100" stroke="#5c3a1e" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M 200 220 Q 130 220 70 240" stroke="#5c3a1e" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M 200 220 Q 270 220 330 240" stroke="#5c3a1e" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M 200 320 Q 140 330 90 360" stroke="#5c3a1e" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M 200 320 Q 260 330 310 360" stroke="#5c3a1e" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <!-- Copa frondosa (nubes de hojas) con animación suave -->
+        <g style="transform-origin:200px 200px;animation:leafSway 6s ease-in-out infinite">
+          <ellipse cx="200" cy="40" rx="130" ry="55" fill="#2d9e6a" opacity=".55"/>
+          <ellipse cx="100" cy="100" rx="75" ry="50" fill="#52b788" opacity=".55"/>
+          <ellipse cx="300" cy="100" rx="75" ry="50" fill="#52b788" opacity=".55"/>
+          <ellipse cx="60" cy="170" rx="55" ry="40" fill="#74c69d" opacity=".5"/>
+          <ellipse cx="340" cy="170" rx="55" ry="40" fill="#74c69d" opacity=".5"/>
+          <ellipse cx="200" cy="190" rx="110" ry="50" fill="#2d9e6a" opacity=".45"/>
+          <ellipse cx="100" cy="260" rx="65" ry="42" fill="#52b788" opacity=".5"/>
+          <ellipse cx="300" cy="260" rx="65" ry="42" fill="#52b788" opacity=".5"/>
+          <ellipse cx="200" cy="270" rx="100" ry="42" fill="#74c69d" opacity=".4"/>
+          <ellipse cx="120" cy="340" rx="55" ry="32" fill="#52b788" opacity=".4"/>
+          <ellipse cx="280" cy="340" rx="55" ry="32" fill="#52b788" opacity=".4"/>
+        </g>
         <!-- Mariposas decorativas -->
         <g>
-          <ellipse cx="10" cy="60" rx="3" ry="2" fill="#f4845f" opacity=".7"/>
-          <ellipse cx="10" cy="60" rx="2" ry="3" fill="#f4845f" opacity=".7"/>
+          <path d="M 40 250 Q 35 245 33 250 Q 35 255 40 252 Z" fill="#f4845f" opacity=".75"/>
+          <path d="M 40 250 Q 45 245 47 250 Q 45 255 40 252 Z" fill="#f4b942" opacity=".75"/>
         </g>
         <g>
-          <ellipse cx="92" cy="65" rx="3" ry="2" fill="#e8a82e" opacity=".7"/>
-          <ellipse cx="92" cy="65" rx="2" ry="3" fill="#e8a82e" opacity=".7"/>
+          <path d="M 360 300 Q 355 295 353 300 Q 355 305 360 302 Z" fill="#e8674a" opacity=".75"/>
+          <path d="M 360 300 Q 365 295 367 300 Q 365 305 360 302 Z" fill="#e8a82e" opacity=".75"/>
         </g>
+        <!-- Florcitas en el pasto -->
+        <g transform="translate(80 530)"><circle r="2" fill="#f4845f"/><circle cx="-2" cy="-2" r="1.5" fill="#f4b942"/><circle cx="2" cy="-2" r="1.5" fill="#f4b942"/></g>
+        <g transform="translate(320 530)"><circle r="2" fill="#e8674a"/><circle cx="-2" cy="-2" r="1.5" fill="#f4b942"/><circle cx="2" cy="-2" r="1.5" fill="#f4b942"/></g>
       </svg>
-      <div style="position:absolute;top:8px;left:0;right:0;text-align:center;z-index:2;pointer-events:none">
-        <div style="font-size:13px;font-weight:700;color:var(--teal2);text-shadow:0 1px 4px rgba(0,0,0,.6)">🌳 Bosque de Pacientes</div>
-        <div style="font-size:10px;color:var(--text3);text-shadow:0 1px 3px rgba(0,0,0,.6)">Toca cada fruta para abrir</div>
+      <!-- Frutas (pacientes) posicionadas con HTML para evitar distorsión -->
+      ${frutasHTML}
+      <!-- Título flotante -->
+      <div style="position:absolute;top:8px;left:0;right:0;text-align:center;z-index:6;pointer-events:none">
+        <div style="font-size:14px;font-weight:700;color:var(--teal2);text-shadow:0 1px 6px rgba(0,0,0,.85),0 0 12px rgba(0,0,0,.7)">🌳 Bosque de Pacientes</div>
+        <div style="font-size:10px;color:#f0ede6;text-shadow:0 1px 4px rgba(0,0,0,.9);margin-top:2px">Toca cada fruta para abrir</div>
       </div>
     </div>
     ${extra.length?`<div style="margin-top:10px"><div class="section-label">+ ${extra.length} más en lista</div>${extra.map(([id,p],i)=>{
@@ -2228,8 +2251,8 @@ function renderPlanArbol(objetivos, paciente){
       .swing-leaf{transform-origin:center bottom;animation:leafSwing 4s ease-in-out infinite}
       @keyframes leafSwing{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
     </style>
-    <div class="card" style="padding:0;overflow:hidden;background:linear-gradient(180deg,rgba(82,183,136,.05) 0%,rgba(13,31,18,.4) 50%,rgba(82,183,136,.08) 100%);position:relative;min-height:480px">
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
+    <div class="card" style="padding:0;overflow:hidden;background:linear-gradient(180deg,rgba(82,183,136,.05) 0%,rgba(13,31,18,.4) 50%,rgba(82,183,136,.08) 100%);position:relative;height:520px;max-width:380px;margin:0 auto">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0;width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
         <!-- Cielo difuminado -->
         <defs>
           <radialGradient id="sunGlow"><stop offset="0%" stop-color="#f4b942" stop-opacity=".6"/><stop offset="100%" stop-color="#f4b942" stop-opacity="0"/></radialGradient>
@@ -2548,8 +2571,8 @@ function renderCieloHitos(hitos){
   }).join('');
 
   return `
-    <div style="position:relative;height:200px;width:100%">
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
+    <div style="position:relative;height:220px;width:100%;max-width:380px;margin:0 auto">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0;width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
         <!-- Cielo nocturno con estrellas tenues -->
         <defs>
           <radialGradient id="moonGlow"><stop offset="0%" stop-color="#f4d77a" stop-opacity=".4"/><stop offset="100%" stop-color="#f4d77a" stop-opacity="0"/></radialGradient>
@@ -2756,8 +2779,8 @@ function renderArbolProgreso(sesiones, hitos){
   const alturaArbol = Math.max(60, Math.min(85, 50 + n * 2)); // crece con sesiones
 
   return `
-    <div style="position:relative;height:280px;width:100%">
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
+    <div style="position:relative;height:320px;width:100%;max-width:380px;margin:0 auto">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0;width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient id="resSun"><stop offset="0%" stop-color="#f4b942" stop-opacity=".5"/><stop offset="100%" stop-color="#f4b942" stop-opacity="0"/></radialGradient>
         </defs>
