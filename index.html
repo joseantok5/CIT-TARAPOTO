@@ -1726,7 +1726,7 @@ function guardarDB(ruta, datos){
 }
 
 // ── LISTA ─────────────────────────────────────────────────────────
-let _vistaLista = 'cards'; // 'cards' o 'bosque'
+let _vistaLista = 'bosque'; // 'cards' o 'bosque' (default: bosque)
 function toggleVistaLista(v){ _vistaLista = v; renderLista(); }
 
 function renderLista(){
@@ -2205,12 +2205,16 @@ function renderPlanArbol(objetivos, paciente){
     else if(o.pct > 0){ color = '#f4845f'; ringColor = '#f7a385'; glow = 'rgba(244,132,95,.45)'; }
     else { color = '#e8674a'; ringColor = '#f08770'; glow = 'rgba(232,103,74,.35)'; }
     const tipoColor = TIPO_HEX[o.tipo] || color;
+    // Nombre corto del objetivo
+    const nombreCorto = o.objetivo.length > 18 ? o.objetivo.substring(0, 16) + '…' : o.objetivo;
     return `
       <g class="fruta-grupo" style="cursor:pointer" onclick="mostrarObjetivoFruta(${o.idx})">
         <circle cx="${pos.x}%" cy="${pos.y}%" r="22" fill="${color}" opacity=".25" class="fruta-glow"/>
         <circle cx="${pos.x}%" cy="${pos.y}%" r="14" fill="${color}" stroke="${ringColor}" stroke-width="2.5" style="filter:drop-shadow(0 0 8px ${glow})"/>
         <circle cx="${pos.x}%" cy="${pos.y}%" r="6" fill="${ringColor}" opacity=".7"/>
-        <text x="${pos.x}%" y="${pos.y}%" text-anchor="middle" dominant-baseline="central" font-size="10" font-weight="700" fill="white">${o.pct}%</text>
+        <text x="${pos.x}%" y="${pos.y}%" text-anchor="middle" dominant-baseline="central" font-size="9" font-weight="700" fill="white">${o.pct}%</text>
+        <rect x="${pos.x-13}%" y="${pos.y+5}%" width="26%" height="3.5%" rx="2" fill="rgba(7,15,9,.85)" stroke="${ringColor}" stroke-width=".3" opacity=".95"/>
+        <text x="${pos.x}%" y="${pos.y+7}%" text-anchor="middle" dominant-baseline="central" font-size="3.2" font-weight="600" fill="${ringColor}" style="pointer-events:none">${nombreCorto}</text>
       </g>`;
   }).join('');
 
@@ -2503,7 +2507,10 @@ function renderHitos(){
         <div style="font-size:11px;color:var(--red);display:flex;align-items:flex-start;gap:6px"><span style="flex-shrink:0">✗</span><span>No es hito: logro puntual de una sesión o con apoyo del adulto</span></div>
       </div>
     </div>
-    ${!hit.length?'<div class="card"><div class="empty-state"><div class="empty-icon">⭐</div><div class="empty-text">Sin hitos registrados</div></div></div>':
+    ${!hit.length?'<div class="card"><div class="empty-state"><div class="empty-icon">⭐</div><div class="empty-text">Sin hitos registrados aún<br><span style="font-size:11px;opacity:.7">Cuando aparezca el primero, brillará en el cielo</span></div></div></div>':
+      `<div class="card" style="padding:0;overflow:hidden;background:linear-gradient(180deg,#0a1e1a 0%,#0d1f12 100%);position:relative;min-height:200px;margin-bottom:12px;border-radius:var(--radius)">
+        ${renderCieloHitos(hit)}
+      </div>` + 
       hit.map((h,idx)=>`<div class="hito-card">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:5px">
           <div style="font-size:12px;font-weight:500;line-height:1.45;flex:1">${h.desc}</div>
@@ -2515,6 +2522,66 @@ function renderHitos(){
         <div style="display:flex;flex-wrap:wrap;gap:4px">${tag(h.tipo)}<span class="tag t-gray">${h.dominio}</span><span class="tag t-green">${h.sesiones||0} ses.</span><span class="tag t-green">${h.semanas||0} sem.</span></div>
         <div style="display:flex;justify-content:space-between;margin-top:5px"><span style="font-size:11px;color:var(--text3)">${h.terapeuta||''}</span><span style="font-size:11px;font-weight:600">${h.fecha||''}</span></div>
       </div>`).join('')}`;
+}
+
+// ── CIELO DE HITOS ────────────────────────────────────────────────
+function renderCieloHitos(hitos){
+  const positions = [[20,30],[40,20],[60,25],[80,35],[15,50],[35,55],[55,45],[75,55],
+    [25,70],[45,75],[65,68],[85,72],[30,85],[50,82],[70,85]];
+  const estrellas = hitos.slice(0, positions.length).map((h, i) => {
+    const pos = positions[i];
+    const color = TIPO_HEX[h.tipo] || '#f4b942';
+    return `
+      <g style="cursor:pointer" onclick="alert('🌟 ${(h.desc||'').substring(0,100).replace(/'/g,'')}\\n\\n📅 ${(h.fecha||'').replace(/'/g,'')}\\n📋 ${(h.tipo||'').replace(/'/g,'')}')">
+        <circle cx="${pos[0]}%" cy="${pos[1]}%" r="6" fill="${color}" opacity=".3">
+          <animate attributeName="r" values="6;9;6" dur="2s" repeatCount="indefinite" begin="${i*0.3}s"/>
+        </circle>
+        <g transform="translate(${pos[0]} ${pos[1]})">
+          <path d="M 0 -4 L 1 -1 L 4 -1 L 1.5 1 L 2.5 4 L 0 2 L -2.5 4 L -1.5 1 L -4 -1 L -1 -1 Z" 
+                fill="${color}" stroke="white" stroke-width=".3" 
+                transform="translate(-${pos[0]} -${pos[1]}) translate(${pos[0]} ${pos[1]})"
+                style="filter:drop-shadow(0 0 4px ${color})">
+            <animate attributeName="opacity" values="1;.7;1" dur="2s" repeatCount="indefinite" begin="${i*0.4}s"/>
+          </path>
+        </g>
+      </g>`;
+  }).join('');
+
+  return `
+    <div style="position:relative;height:200px;width:100%">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
+        <!-- Cielo nocturno con estrellas tenues -->
+        <defs>
+          <radialGradient id="moonGlow"><stop offset="0%" stop-color="#f4d77a" stop-opacity=".4"/><stop offset="100%" stop-color="#f4d77a" stop-opacity="0"/></radialGradient>
+        </defs>
+        <!-- Luna -->
+        <circle cx="88" cy="15" r="14" fill="url(#moonGlow)"/>
+        <circle cx="88" cy="15" r="6" fill="#f4d77a" opacity=".9"/>
+        <circle cx="86" cy="13" r="1.5" fill="#d4b896" opacity=".5"/>
+        <!-- Estrellas pequeñas decorativas -->
+        <circle cx="10" cy="20" r=".5" fill="white" opacity=".5"><animate attributeName="opacity" values=".3;.8;.3" dur="3s" repeatCount="indefinite"/></circle>
+        <circle cx="25" cy="10" r=".4" fill="white" opacity=".6"/>
+        <circle cx="50" cy="8" r=".5" fill="white" opacity=".5"><animate attributeName="opacity" values=".3;.8;.3" dur="4s" repeatCount="indefinite"/></circle>
+        <circle cx="70" cy="12" r=".4" fill="white" opacity=".6"/>
+        <circle cx="5" cy="40" r=".4" fill="white" opacity=".5"/>
+        <circle cx="95" cy="35" r=".5" fill="white" opacity=".6"><animate attributeName="opacity" values=".3;.8;.3" dur="3.5s" repeatCount="indefinite"/></circle>
+        <circle cx="8" cy="65" r=".4" fill="white" opacity=".5"/>
+        <circle cx="92" cy="60" r=".4" fill="white" opacity=".6"/>
+        <!-- Suelo difuminado -->
+        <ellipse cx="50" cy="100" rx="55" ry="8" fill="#2d9e6a" opacity=".25"/>
+        <!-- Pequeño árbol abajo izquierda -->
+        <path d="M 10 95 L 10 88" stroke="#5c3a1e" stroke-width="1"/>
+        <circle cx="10" cy="86" r="4" fill="#52b788" opacity=".6"/>
+        <!-- Pequeño árbol abajo derecha -->
+        <path d="M 90 95 L 90 87" stroke="#5c3a1e" stroke-width="1"/>
+        <circle cx="90" cy="85" r="5" fill="#52b788" opacity=".6"/>
+        <!-- Estrellas hitos -->
+        ${estrellas}
+      </svg>
+      <div style="position:absolute;top:8px;left:0;right:0;text-align:center;z-index:2;pointer-events:none">
+        <div style="font-size:11px;font-weight:700;color:#f4d77a;text-shadow:0 1px 4px rgba(0,0,0,.8)">✨ Cielo de Logros</div>
+      </div>
+    </div>`;
 }
 
 // ── RESUMEN ───────────────────────────────────────────────────────
@@ -2621,9 +2688,12 @@ function renderResumen(){
       <div class="card-title">Por dominio Denver</div>
       ${Object.entries(dm).map(([d,v])=>{const pi=avg(v.pis),pf=avg(v.pfs),a=pf-pi;const col=pf>=4?'#16a34a':pf>=3?'#1e40af':'#d97706';return`<div class="prog-wrap"><div class="prog-label"><span>${d}</span><span style="display:flex;gap:5px;align-items:center">${sc(Math.round(pf*10)/10)} ${ts(a)}</span></div><div class="prog-track"><div class="prog-fill" style="width:${Math.round(pf/5*100)}%;background:${col}"></div></div></div>`;}).join('')}
     </div>
-    <div class="card">
-      <div class="card-title">${usuarioActual?.esAdmin?'Distribución':'Mi progreso — Sesiones realizadas vs planificadas'}</div>
-      <div class="chart-wrap" style="height:175px"><canvas id="chartRes" role="img" aria-label="Sesiones del período">Gráfico</canvas></div>
+    <div class="card" style="padding:0;overflow:hidden;background:linear-gradient(180deg,rgba(82,183,136,.08) 0%,rgba(13,31,18,.4) 60%,rgba(82,183,136,.12) 100%);position:relative;min-height:340px;border-radius:var(--radius)">
+      <div style="padding:14px 16px 8px;position:relative;z-index:2">
+        <div class="card-title" style="margin-bottom:4px">🌳 Mi árbol de progreso — ${etiqueta}</div>
+        <div style="font-size:10px;color:var(--text3)">Cada fruto representa una sesión · Las flores son hitos consolidados</div>
+      </div>
+      ${renderArbolProgreso(ses, hit)}
     </div>
     ${recomendaciones.length?`<div class="card">
       <div class="card-title">Recomendaciones del período</div>
@@ -2639,39 +2709,102 @@ function renderResumen(){
     </div>`;
 
   if(resChart){resChart.destroy();resChart=null;}
-  setTimeout(()=>{
-    const cv=document.getElementById('chartRes'); if(!cv)return;
-    if(usuarioActual?.esAdmin){
-      // Admin: gráfico de distribución por tipo de terapia (barras)
-      resChart=new Chart(cv,{type:'bar',
-        data:{labels:tipos.map(t=>t.tipo.replace('Terapia de ','').replace('Terapia ','').replace(' (ABA)','')),
-          datasets:[{data:tipos.map(t=>t.n),backgroundColor:tipos.map(t=>TIPO_HEX[t.tipo]||'#888'),borderWidth:0,borderRadius:4}]},
-        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-          scales:{y:{beginAtZero:true,ticks:{stepSize:1,color:'rgba(240,230,210,.55)',font:{size:10}},grid:{color:'rgba(82,183,136,.08)'}},
-            x:{ticks:{color:'rgba(240,230,210,.55)',font:{size:10}},grid:{display:false}}}}});
-    } else {
-      // Terapeuta: gráfico de progreso — sesiones realizadas vs planificadas por objetivo
-      const miTipo=getMiTipoEnPaciente();
-      const planTer=arrOf(pacientes[pacienteActivo]?.plan).filter(o=>o.tipo===miTipo);
-      const labels=planTer.map(o=>o.objetivo.substring(0,25)+(o.objetivo.length>25?'...':''));
-      const realizadas=planTer.map(o=>ses.filter(s=>s.objetivoTrabajado===o.objetivo).length);
-      const planificadas=planTer.map(o=>o.sesionesPlani||0);
-      if(!planTer.length){
-        cv.parentElement.innerHTML='<div style="text-align:center;padding:30px;font-size:12px;color:rgba(255,255,255,.4)">Sin objetivos planificados aún</div>';
-        return;
-      }
-      resChart=new Chart(cv,{type:'bar',
-        data:{labels,
-          datasets:[
-            {label:'Realizadas',data:realizadas,backgroundColor:'rgba(82,183,136,.8)',borderWidth:0,borderRadius:4},
-            {label:'Planificadas',data:planificadas,backgroundColor:'rgba(244,185,66,.2)',borderWidth:0,borderRadius:4}
-          ]},
-        options:{responsive:true,maintainAspectRatio:false,
-          plugins:{legend:{display:true,labels:{color:'rgba(240,230,210,.6)',font:{size:10},boxWidth:12}}},
-          scales:{y:{beginAtZero:true,ticks:{stepSize:1,color:'rgba(240,230,210,.55)',font:{size:10}},grid:{color:'rgba(82,183,136,.08)'}},
-            x:{ticks:{color:'rgba(240,230,210,.55)',font:{size:9},maxRotation:30},grid:{display:false}}}}});
-    }
-  },100);
+}
+
+// ── ÁRBOL DE PROGRESO PARA RESUMEN ─────────────────────────────
+function renderArbolProgreso(sesiones, hitos){
+  const n = sesiones.length;
+  const h = hitos.length;
+  // Mapear sesiones a frutos
+  const frutos = sesiones.slice(0, 24).map((s, i) => {
+    const color = TIPO_HEX[s.tipo] || '#52b788';
+    // Posiciones distribuidas en el árbol
+    const positions = [
+      [50,18],[35,22],[65,22],[25,32],[50,30],[75,32],
+      [18,42],[42,40],[58,40],[82,42],[30,50],[50,50],
+      [70,50],[20,58],[40,58],[60,58],[80,58],[35,65],
+      [50,67],[65,65],[28,72],[50,75],[72,72],[40,80],
+      [60,80]
+    ];
+    const pos = positions[i % positions.length];
+    const score = (s.pf||0);
+    const opacity = score >= 4 ? 1 : score >= 3 ? .85 : score >= 2 ? .7 : .55;
+    const r = score >= 4 ? 3.5 : 3;
+    return `
+      <g style="cursor:pointer" onclick="alert('${(s.fecha||'').replace(/'/g,'')} — ${(s.tipo||'').replace(/'/g,'')}\\n${(s.logro||s.actividades||'').substring(0,80).replace(/'/g,'')}')">
+        <circle cx="${pos[0]}%" cy="${pos[1]}%" r="${r}" fill="${color}" opacity="${opacity}" style="filter:drop-shadow(0 0 3px ${color})">
+          <animate attributeName="r" values="${r};${r+0.5};${r}" dur="3s" repeatCount="indefinite" begin="${i*0.1}s"/>
+        </circle>
+      </g>`;
+  }).join('');
+
+  // Hitos como flores brillantes
+  const flores = hitos.slice(0, 8).map((hi, i) => {
+    const florPos = [[15,28],[85,28],[20,55],[80,55],[15,72],[85,72],[40,15],[60,15]];
+    const pos = florPos[i % florPos.length];
+    return `
+      <g style="cursor:pointer" onclick="alert('🌟 HITO: ${(hi.desc||'').substring(0,80).replace(/'/g,'')}\\n${(hi.fecha||'').replace(/'/g,'')}')">
+        <circle cx="${pos[0]}%" cy="${pos[1]}%" r="2.5" fill="#f4845f" opacity=".9"/>
+        <circle cx="${pos[0]-2}%" cy="${pos[1]-1}%" r="2" fill="#f4b942" opacity=".85"/>
+        <circle cx="${pos[0]+2}%" cy="${pos[1]-1}%" r="2" fill="#f4b942" opacity=".85"/>
+        <circle cx="${pos[0]-2}%" cy="${pos[1]+1}%" r="2" fill="#e8a82e" opacity=".85"/>
+        <circle cx="${pos[0]+2}%" cy="${pos[1]+1}%" r="2" fill="#e8a82e" opacity=".85"/>
+        <circle cx="${pos[0]}%" cy="${pos[1]}%" r="1" fill="#fff" opacity=".9"/>
+      </g>`;
+  }).join('');
+
+  const alturaArbol = Math.max(60, Math.min(85, 50 + n * 2)); // crece con sesiones
+
+  return `
+    <div style="position:relative;height:280px;width:100%">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="resSun"><stop offset="0%" stop-color="#f4b942" stop-opacity=".5"/><stop offset="100%" stop-color="#f4b942" stop-opacity="0"/></radialGradient>
+        </defs>
+        <!-- Sol -->
+        <circle cx="88" cy="10" r="11" fill="url(#resSun)"/>
+        <circle cx="88" cy="10" r="4" fill="#f4b942" opacity=".8"/>
+        <!-- Pasto -->
+        <ellipse cx="50" cy="100" rx="55" ry="8" fill="#2d9e6a" opacity=".4"/>
+        <ellipse cx="50" cy="100" rx="40" ry="5" fill="#52b788" opacity=".5"/>
+        <!-- Tronco grueso -->
+        <path d="M 47 100 Q 48 80 48.5 60 Q 49 40 49.5 20 Q 50.5 40 51 60 Q 51.5 80 53 100 Z" fill="#5c3a1e"/>
+        <!-- Ramas -->
+        <path d="M 50 50 Q 35 48 22 50" stroke="#5c3a1e" stroke-width="1.5" fill="none" opacity=".8" stroke-linecap="round"/>
+        <path d="M 50 45 Q 65 43 78 45" stroke="#5c3a1e" stroke-width="1.5" fill="none" opacity=".8" stroke-linecap="round"/>
+        <path d="M 50 65 Q 38 67 28 72" stroke="#5c3a1e" stroke-width="1.2" fill="none" opacity=".8" stroke-linecap="round"/>
+        <path d="M 50 65 Q 62 67 72 72" stroke="#5c3a1e" stroke-width="1.2" fill="none" opacity=".8" stroke-linecap="round"/>
+        <!-- Copa frondosa: nubes de hojas -->
+        <ellipse cx="50" cy="18" rx="28" ry="16" fill="#2d9e6a" opacity=".5"/>
+        <ellipse cx="30" cy="32" rx="20" ry="14" fill="#52b788" opacity=".5"/>
+        <ellipse cx="70" cy="32" rx="20" ry="14" fill="#52b788" opacity=".5"/>
+        <ellipse cx="18" cy="48" rx="14" ry="10" fill="#74c69d" opacity=".5"/>
+        <ellipse cx="82" cy="48" rx="14" ry="10" fill="#74c69d" opacity=".5"/>
+        <ellipse cx="50" cy="42" rx="25" ry="14" fill="#2d9e6a" opacity=".45"/>
+        <ellipse cx="28" cy="62" rx="14" ry="9" fill="#52b788" opacity=".45"/>
+        <ellipse cx="72" cy="62" rx="14" ry="9" fill="#52b788" opacity=".45"/>
+        <ellipse cx="35" cy="78" rx="12" ry="7" fill="#74c69d" opacity=".4"/>
+        <ellipse cx="65" cy="78" rx="12" ry="7" fill="#74c69d" opacity=".4"/>
+        <!-- Frutos (sesiones) -->
+        ${frutos}
+        <!-- Flores (hitos) -->
+        ${flores}
+        <!-- Mariposas -->
+        <g>
+          <path d="M 12 60 Q 10 58 9 60 Q 10 62 12 61 Z" fill="#f4845f" opacity=".75"/>
+          <path d="M 12 60 Q 14 58 15 60 Q 14 62 12 61 Z" fill="#f4b942" opacity=".75"/>
+        </g>
+        <g>
+          <path d="M 90 70 Q 88 68 87 70 Q 88 72 90 71 Z" fill="#e8674a" opacity=".75"/>
+          <path d="M 90 70 Q 92 68 93 70 Q 92 72 90 71 Z" fill="#e8a82e" opacity=".75"/>
+        </g>
+      </svg>
+    </div>
+    <div style="display:flex;justify-content:space-around;padding:12px 16px 16px;background:linear-gradient(180deg,transparent,rgba(7,15,9,.85))">
+      <div style="text-align:center"><div style="font-size:18px;font-weight:700;color:#52b788">${n}</div><div style="font-size:9px;color:var(--text3);text-transform:uppercase">🍎 Frutos</div></div>
+      <div style="text-align:center"><div style="font-size:18px;font-weight:700;color:#f4b942">${h}</div><div style="font-size:9px;color:var(--text3);text-transform:uppercase">🌼 Flores (hitos)</div></div>
+    </div>
+  `;
 }
 
 function cambiarModoResumen(modo){
