@@ -1785,18 +1785,20 @@ function renderLista(){
 // ── VISTA BOSQUE — Pacientes como frutas en un árbol grande ─────
 function renderListaBosque(lista){
   const N = lista.length;
-  // Distribución en grid sobre el árbol (filas de 3, 4, 3, 2)
+  // Distribución sobre las ramas reales del árbol
   const posiciones = [
-    // Fila superior (3 frutas en la copa alta)
-    {top:'8%', left:'30%'}, {top:'4%', left:'50%'}, {top:'8%', left:'70%'},
-    // Fila media (4 frutas)
-    {top:'25%', left:'18%'}, {top:'22%', left:'40%'}, {top:'22%', left:'60%'}, {top:'25%', left:'82%'},
-    // Fila media-baja (3)
-    {top:'42%', left:'25%'}, {top:'40%', left:'50%'}, {top:'42%', left:'75%'},
-    // Fila baja (3)
-    {top:'58%', left:'30%'}, {top:'56%', left:'50%'}, {top:'58%', left:'70%'},
-    // Suelo (más frutas caídas)
-    {top:'78%', left:'20%'}, {top:'78%', left:'50%'}, {top:'78%', left:'80%'},
+    // Copa alta (centro arriba)
+    {top:'12%', left:'50%'},
+    // Fila ramas superiores (3 en arco)
+    {top:'22%', left:'25%'}, {top:'18%', left:'50%'}, {top:'22%', left:'75%'},
+    // Fila copa media (3)
+    {top:'34%', left:'18%'}, {top:'30%', left:'50%'}, {top:'34%', left:'82%'},
+    // Fila ramas medias (3)
+    {top:'46%', left:'25%'}, {top:'44%', left:'50%'}, {top:'46%', left:'75%'},
+    // Fila copa baja (3)
+    {top:'58%', left:'22%'}, {top:'56%', left:'50%'}, {top:'58%', left:'78%'},
+    // Frutas en el suelo (3)
+    {top:'80%', left:'25%'}, {top:'80%', left:'50%'}, {top:'80%', left:'75%'},
   ];
 
   const frutasHTML = lista.slice(0, posiciones.length).map(([id,p],i)=>{
@@ -2510,9 +2512,11 @@ function renderSesiones(){
 function renderHitos(){
   const p=pacientes[pacienteActivo];
   const todasHitos=arrOf(p.hitos);
-  const miTipoH = !usuarioActual?.esAdmin ? getMiTipoEnPaciente() : null;
-  const hit = usuarioActual?.esAdmin ? todasHitos : todasHitos.filter(h=>miTipoH ? h.tipo===miTipoH : h.tipo===miTipoH);
-  const canEdit=usuarioActual?.esAdmin;
+  const esAdminH = usuarioActual?.esAdmin;
+  const miTipoH = !esAdminH ? getMiTipoEnPaciente() : null;
+  const hit = esAdminH ? todasHitos : todasHitos.filter(h=>h.tipo===miTipoH);
+  // Admin siempre puede; terapeuta puede si tiene especialidad asignada
+  const canEdit = esAdminH || !!miTipoH;
   document.getElementById('panel-4').innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
       <div style="font-size:14px;font-weight:700;color:var(--teal2)">Hitos consolidados <span style="font-size:12px;font-weight:400;color:var(--text3)">(${hit.length})</span></div>
@@ -2537,7 +2541,7 @@ function renderHitos(){
       hit.map((h,idx)=>`<div class="hito-card">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:5px">
           <div style="font-size:12px;font-weight:500;line-height:1.45;flex:1">${h.desc}</div>
-          ${canEdit?`<div style="display:flex;gap:5px;flex-shrink:0">
+          ${canEdit && (esAdminH||h.tipo===miTipoH)?`<div style="display:flex;gap:5px;flex-shrink:0">
             <button class="btn-edit" onclick="editarHito(${idx})" style="font-size:10px;padding:3px 8px" title="Editar">✏️</button>
             <button class="btn-del" onclick="eliminarHito(${idx})" style="font-size:10px;padding:3px 8px" title="Eliminar">🗑</button>
           </div>`:''}
@@ -2705,7 +2709,7 @@ function renderResumen(){
     </div>
     <div class="card">
       <div class="card-title">Por tipo de terapia</div>
-      ${tipos.map(t=>{const pi=avg(t.pis),pf=avg(t.pfs),a=pf-pi;return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap"><div style="flex:1;min-width:110px">${tag(t.tipo)}<div style="font-size:11px;color:var(--text3);margin-top:2px">${t.ter||''} · ${t.n} ses.</div></div><div style="display:flex;align-items:center;gap:4px">${sc(pi)}<span style="font-size:10px;color:var(--text3)">→</span>${sc(pf)} ${ts(a)}</div></div>`;}).join('')}
+      ${tipos.map(t=>{const pi=Math.round(avg(t.pis)*10)/10,pf=Math.round(avg(t.pfs)*10)/10,a=Math.round((pf-pi)*10)/10;return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap"><div style="flex:1;min-width:110px">${tag(t.tipo)}<div style="font-size:11px;color:var(--text3);margin-top:2px">${t.ter||''} · ${t.n} ses.</div></div><div style="display:flex;align-items:center;gap:4px">${sc(pi)}<span style="font-size:10px;color:var(--text3)">→</span>${sc(pf)} ${ts(a)}</div></div>`;}).join('')}
     </div>
     <div class="card">
       <div class="card-title">Por dominio Denver</div>
@@ -2763,7 +2767,8 @@ function renderArbolProgreso(sesiones, hitos){
 
   // Hitos como flores brillantes
   const flores = hitos.slice(0, 8).map((hi, i) => {
-    const florPos = [[15,28],[85,28],[20,55],[80,55],[15,72],[85,72],[40,15],[60,15]];
+    // Posiciones dentro del follaje del árbol
+    const florPos = [[35,18],[65,18],[25,30],[75,30],[40,45],[60,45],[30,60],[70,60]];
     const pos = florPos[i % florPos.length];
     return `
       <g style="cursor:pointer" onclick="alert('🌟 HITO: ${(hi.desc||'').substring(0,80).replace(/'/g,'')}\\n${(hi.fecha||'').replace(/'/g,'')}')">
