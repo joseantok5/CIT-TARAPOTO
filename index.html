@@ -1269,6 +1269,124 @@ const TIPO_CLS = {
   // General
   'Terapia de Juego':'t-amber','Musicoterapia':'t-purple','Arteterapia':'t-amber',
 };
+// ── ICONOS SVG TEMÁTICOS POR TERAPIA ──────────────────────────
+const TIPO_ICON = {
+  'Terapia Conductual (ABA)': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 5c-5 0-9 4-9 8 0 2 1 4 2 5l-1 4 4-1c1 1 2 1 4 1s3 0 4-1l4 1-1-4c1-1 2-3 2-5 0-4-4-8-9-8z" fill="currentColor" opacity=".25"/>
+    <path d="M11 11c0-2 2-3 3-3M21 11c0-2-2-3-3-3M14 16c1 1 3 1 4 0M11 14h1M20 14h1" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <circle cx="16" cy="18" r="1.5" fill="currentColor"/>
+  </svg>`,
+  'Terapia de Lenguaje': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 5c-6 0-10 4-10 9 0 3 2 5 4 7l-2 5 6-2c4 0 12-3 12-10 0-5-4-9-10-9z" fill="currentColor" opacity=".25"/>
+    <path d="M11 13h10M11 16h7M11 19h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </svg>`,
+  'Terapia Ocupacional': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 4l-1 12-3-2-3 2v8c0 2 2 4 4 4h6c2 0 4-2 4-4v-8l-3-2-3 2-1-12z" fill="currentColor" opacity=".25"/>
+    <path d="M16 4v12M12 14l-3 2v6c0 2 1 4 3 4M20 14l3 2v6c0 2-1 4-3 4M12 18h8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  'Terapia de Integración Sensorial': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="16" cy="16" r="3" fill="currentColor"/>
+    <circle cx="16" cy="16" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".6"/>
+    <circle cx="16" cy="16" r="11" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".4"/>
+    <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="1" opacity=".25"/>
+  </svg>`,
+  'Intervención ESDM / Denver': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 4l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" fill="currentColor" opacity=".3"/>
+    <path d="M16 4l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+  </svg>`,
+  'Terapia Cognitivo-Conductual': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 16a6 6 0 0112 0c0 4-3 6-6 8-3-2-6-4-6-8z" fill="currentColor" opacity=".25"/>
+    <path d="M16 10v12M12 14h8M12 18h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </svg>`,
+  'Psicoeducación': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 12l12-5 12 5-12 5z" fill="currentColor" opacity=".3"/>
+    <path d="M9 14v6c0 2 3 4 7 4s7-2 7-4v-6M27 13v7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  'Entrenamiento en Habilidades Sociales': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="10" cy="11" r="3.5" fill="currentColor" opacity=".3"/>
+    <circle cx="22" cy="11" r="3.5" fill="currentColor" opacity=".3"/>
+    <path d="M4 22c0-3 3-6 6-6s6 3 6 6M16 22c0-3 3-6 6-6s6 3 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  'Fisioterapia': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="16" cy="7" r="3" fill="currentColor" opacity=".3"/>
+    <path d="M16 10v8M12 14l-3 5 2 5M20 14l3 5-2 5M14 20l-2 7M18 20l2 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  'Psicomotricidad': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="14" cy="7" r="3" fill="currentColor" opacity=".3"/>
+    <path d="M14 10c-2 4-2 6 0 8M14 18l-4 3 1 5M14 18l5 2 1 6M11 13l-4-1M17 12l5-2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  'Estimulación Temprana': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="16" cy="16" r="5" fill="currentColor" opacity=".4"/>
+    <path d="M16 5v4M16 23v4M5 16h4M23 16h4M8 8l3 3M21 21l3 3M24 8l-3 3M8 24l3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </svg>`,
+  'Fonoaudiología': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 18v-4l6-2 8-6v20l-8-6-6-2z" fill="currentColor" opacity=".3"/>
+    <path d="M24 12c2 2 2 6 0 8M26 9c4 3 4 11 0 14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  'Estimulación del Lenguaje': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 20l4 4v-4h12c2 0 4-2 4-4v-8c0-2-2-4-4-4H10c-2 0-4 2-4 4z" fill="currentColor" opacity=".3"/>
+    <circle cx="12" cy="13" r="1.5" fill="currentColor"/>
+    <circle cx="17" cy="13" r="1.5" fill="currentColor"/>
+    <circle cx="22" cy="13" r="1.5" fill="currentColor"/>
+  </svg>`,
+  'Terapia Familiar': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="10" cy="10" r="3" fill="currentColor" opacity=".3"/>
+    <circle cx="22" cy="10" r="3" fill="currentColor" opacity=".3"/>
+    <circle cx="16" cy="20" r="2.5" fill="currentColor" opacity=".4"/>
+    <path d="M5 18c0-3 2-5 5-5s5 2 5 5M17 18c0-3 2-5 5-5s5 2 5 5M13 26c0-2 1-4 3-4s3 2 3 4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  'Terapia de Conducta': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 4l2 6h6l-5 4 2 7-5-4-5 4 2-7-5-4h6z" fill="currentColor" opacity=".4" transform="translate(6 4)"/>
+  </svg>`,
+  'Mindfulness Infantil': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="16" cy="12" r="4" fill="currentColor" opacity=".3"/>
+    <path d="M9 22c2-2 4-3 7-3s5 1 7 3M11 19c-2 1-3 3-3 5M21 19c2 1 3 3 3 5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  'Estimulación Cognitiva': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <rect x="6" y="10" width="6" height="6" rx="1" fill="currentColor" opacity=".4"/>
+    <rect x="14" y="6" width="6" height="6" rx="1" fill="currentColor" opacity=".3"/>
+    <rect x="20" y="14" width="6" height="6" rx="1" fill="currentColor" opacity=".5"/>
+    <rect x="10" y="18" width="6" height="6" rx="1" fill="currentColor" opacity=".3"/>
+  </svg>`,
+  'Terapia de Aprendizaje Adaptativo': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 8l12-3 12 3-12 3z" fill="currentColor" opacity=".4"/>
+    <path d="M8 11v8c0 2 3 4 8 4s8-2 8-4v-8" stroke="currentColor" stroke-width="2" fill="none"/>
+    <path d="M28 11v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </svg>`,
+  'Hidroterapia': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 4c-3 5-7 9-7 14a7 7 0 0014 0c0-5-4-9-7-14z" fill="currentColor" opacity=".35"/>
+    <path d="M13 18a3 3 0 003 3" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".7"/>
+  </svg>`,
+  'Terapia de Neurodesarrollo (NDT)': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 8c-2 4 0 8 4 10-2 4 0 8 4 8M24 8c2 4 0 8-4 10 2 4 0 8-4 8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="16" cy="16" r="2.5" fill="currentColor"/>
+  </svg>`,
+  'Terapia de Juego': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="11" cy="11" r="5" fill="currentColor" opacity=".4"/>
+    <circle cx="21" cy="21" r="5" fill="currentColor" opacity=".4"/>
+    <rect x="17" y="6" width="9" height="9" rx="1.5" fill="currentColor" opacity=".3"/>
+    <rect x="6" y="17" width="9" height="9" rx="1.5" fill="currentColor" opacity=".3"/>
+  </svg>`,
+  'Musicoterapia': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="10" cy="22" r="3" fill="currentColor" opacity=".4"/>
+    <circle cx="22" cy="20" r="3" fill="currentColor" opacity=".4"/>
+    <path d="M13 22V8l12-3v15M13 12l12-3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  'Arteterapia': `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 4C9 4 4 9 4 16c0 5 5 8 9 7 2 0 3 1 3 3 0 1 1 2 3 2 5 0 9-4 9-12 0-7-5-12-12-12z" fill="currentColor" opacity=".25"/>
+    <circle cx="10" cy="13" r="2" fill="#f4845f"/>
+    <circle cx="16" cy="10" r="2" fill="#f4b942"/>
+    <circle cx="22" cy="13" r="2" fill="#52b788"/>
+    <circle cx="22" cy="20" r="2" fill="#c3a882"/>
+  </svg>`,
+};
+
+function iconoTerapia(tipo, size=18){
+  const color = TIPO_HEX[tipo] || '#74c69d';
+  const svg = TIPO_ICON[tipo] || `<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" fill="currentColor" opacity=".3"/></svg>`;
+  return `<span style="display:inline-flex;align-items:center;justify-content:center;width:${size+8}px;height:${size+8}px;border-radius:50%;background:${color}22;color:${color};flex-shrink:0;border:1px solid ${color}44">${svg.replace('viewBox=','width="'+size+'" height="'+size+'" viewBox=')}</span>`;
+}
+
 const TIPO_HEX = {
   // TEA
   'Terapia de Lenguaje':'#f4845f','Terapia Conductual (ABA)':'#e8674a',
@@ -1335,7 +1453,16 @@ const AV_COL = ['#f4845f','#52b788','#f4b942','#c3a882','#74c69d','#e8a82e','#e8
 
 // ── Helpers ───────────────────────────────────────────────────────
 const ini   = n => n.split(' ').filter(w=>w.length>2).slice(0,2).map(w=>w[0].toUpperCase()).join('');
-const tag   = t => `<span class="tag ${TIPO_CLS[t]||'t-gray'}">${t}</span>`;
+const tag   = t => {
+  const tipoIcons = (typeof TIPO_ICON !== 'undefined') ? TIPO_ICON : {};
+  const tipoHex = (typeof TIPO_HEX !== 'undefined') ? TIPO_HEX : {};
+  if(tipoIcons[t]){
+    const color = tipoHex[t] || '#74c69d';
+    const icon = tipoIcons[t].replace('viewBox=','width="11" height="11" viewBox=');
+    return `<span class="tag ${TIPO_CLS[t]||'t-gray'}" style="display:inline-flex;align-items:center;gap:3px;padding-left:3px"><span style="display:inline-flex;color:${color}">${icon}</span>${t}</span>`;
+  }
+  return `<span class="tag ${TIPO_CLS[t]||'t-gray'}">${t}</span>`;
+};
 const sc    = v => `<span class="score s${Math.min(Math.max(Math.round(+v||1),1),5)}">${+v||1}</span>`;
 const avg   = a => a.length?a.reduce((s,v)=>s+(+v||0),0)/a.length:0;
 const rc    = r => r==='Muy positiva'||r==='Positiva'?'react-pos':r==='Rechazo'?'react-neg':'react-neu';
@@ -1599,6 +1726,9 @@ function guardarDB(ruta, datos){
 }
 
 // ── LISTA ─────────────────────────────────────────────────────────
+let _vistaLista = 'cards'; // 'cards' o 'bosque'
+function toggleVistaLista(v){ _vistaLista = v; renderLista(); }
+
 function renderLista(){
   const cont = document.getElementById('lista-pacientes');
   const q = (document.getElementById('search-pac').value||'').toLowerCase();
@@ -1614,11 +1744,26 @@ function renderLista(){
   if(q) lista = lista.filter(([,p])=>p.nombre.toLowerCase().includes(q));
   lista.sort((a,b)=>a[1].nombre.localeCompare(b[1].nombre));
 
+  const toggleHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:0 2px">
+      <div class="section-label" style="margin:0">${lista.length} paciente${lista.length!==1?'s':''}</div>
+      <div style="display:flex;gap:5px">
+        <button onclick="toggleVistaLista('cards')" style="padding:5px 10px;border-radius:18px;border:1px solid ${_vistaLista==='cards'?'var(--coral)':'rgba(255,245,225,.13)'};background:${_vistaLista==='cards'?'rgba(244,132,95,.15)':'transparent'};color:${_vistaLista==='cards'?'var(--coral)':'var(--text3)'};font-size:10px;font-weight:600;cursor:pointer;font-family:inherit">📋 Lista</button>
+        <button onclick="toggleVistaLista('bosque')" style="padding:5px 10px;border-radius:18px;border:1px solid ${_vistaLista==='bosque'?'var(--coral)':'rgba(255,245,225,.13)'};background:${_vistaLista==='bosque'?'rgba(244,132,95,.15)':'transparent'};color:${_vistaLista==='bosque'?'var(--coral)':'var(--text3)'};font-size:10px;font-weight:600;cursor:pointer;font-family:inherit">🌳 Bosque</button>
+      </div>
+    </div>`;
+
   if(!lista.length){
-    cont.innerHTML=`<div class="empty-state"><div class="empty-icon">👶</div><div class="empty-text">${q?'Sin resultados para "'+q+'"':usuarioActual?.esAdmin?'Sin pacientes. Usa + para agregar.':'No tienes pacientes asignados aún.'}</div></div>`;
+    cont.innerHTML=toggleHTML + `<div class="empty-state"><div class="empty-icon">🌱</div><div class="empty-text">${q?'Sin resultados para "'+q+'"':usuarioActual?.esAdmin?'Sin pacientes. Usa + para agregar.':'No tienes pacientes asignados aún.'}</div></div>`;
     return;
   }
-  cont.innerHTML = `<div class="section-label">${lista.length} paciente${lista.length!==1?'s':''}</div>` +
+
+  if(_vistaLista === 'bosque'){
+    cont.innerHTML = toggleHTML + renderListaBosque(lista);
+    return;
+  }
+
+  cont.innerHTML = toggleHTML +
     lista.map(([id,p],i)=>{
       const bg=AV_BG[i%AV_BG.length], col=AV_COL[i%AV_COL.length];
       const estado=p.estado||'Activo';
@@ -1635,6 +1780,99 @@ function renderLista(){
         <span class="p-badge ${bcls}">${estado}</span>
       </div>`;
     }).join('');
+}
+
+// ── VISTA BOSQUE — Cada paciente como fruta en un árbol ─────────
+function renderListaBosque(lista){
+  // Distribuir frutas en el árbol según cantidad
+  const N = lista.length;
+  const posiciones = [
+    [25,30],[50,18],[75,30],
+    [15,48],[38,42],[62,42],[85,48],
+    [22,62],[45,60],[55,60],[78,62],
+    [30,76],[50,80],[70,76],
+    [40,90],[60,90]
+  ];
+
+  const frutas = lista.slice(0, posiciones.length).map(([id,p],i)=>{
+    const [x,y] = posiciones[i];
+    const bg = AV_BG[i%AV_BG.length], col = AV_COL[i%AV_COL.length];
+    const estado = p.estado||'Activo';
+    const ringColor = estado==='Activo'?'#74c69d':estado==='Alta'?'#c3a882':'#e8674a';
+    const haveFoto = !!p.fotoURL;
+    return `
+      <g class="fruta-paciente" style="cursor:pointer" onclick="abrirPaciente('${id}')">
+        <circle cx="${x}%" cy="${y}%" r="32" fill="${ringColor}" opacity=".15"/>
+        <circle cx="${x}%" cy="${y}%" r="22" fill="${ringColor}" opacity=".4"/>
+        ${haveFoto
+          ? `<defs><clipPath id="clip-${id}"><circle cx="${x}%" cy="${y}%" r="18"/></clipPath></defs>
+             <image href="${p.fotoURL}" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clip-path="url(#clip-${id})"/>
+             <circle cx="${x}%" cy="${y}%" r="18" fill="none" stroke="${ringColor}" stroke-width="2"/>`
+          : `<circle cx="${x}%" cy="${y}%" r="18" fill="${col}" stroke="${ringColor}" stroke-width="2"/>
+             <text x="${x}%" y="${y}%" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700" fill="white">${ini(p.nombre)}</text>`}
+      </g>
+      <text x="${x}%" y="${y+9}%" text-anchor="middle" font-size="9" font-weight="600" fill="#f0ede6" style="pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.7)">${p.nombre.split(' ')[0].substring(0,10)}</text>
+    `;
+  }).join('');
+
+  // Si hay más de 16, mostrar lista debajo
+  const extra = N > posiciones.length ? lista.slice(posiciones.length) : [];
+
+  return `
+    <style>
+      .fruta-paciente:hover circle:nth-child(2){animation:fruitFloat .6s ease infinite}
+      @keyframes fruitFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+    </style>
+    <div class="card" style="padding:0;overflow:hidden;background:linear-gradient(180deg,rgba(82,183,136,.06) 0%,rgba(13,31,18,.5) 60%,rgba(82,183,136,.1) 100%);position:relative;min-height:560px;border-radius:var(--radius)">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
+        <!-- Sol -->
+        <defs><radialGradient id="bosqueSun"><stop offset="0%" stop-color="#f4b942" stop-opacity=".5"/><stop offset="100%" stop-color="#f4b942" stop-opacity="0"/></radialGradient></defs>
+        <circle cx="88" cy="10" r="12" fill="url(#bosqueSun)"/>
+        <circle cx="88" cy="10" r="4" fill="#f4b942" opacity=".8"/>
+        <!-- Pasto -->
+        <ellipse cx="50" cy="100" rx="60" ry="10" fill="#2d9e6a" opacity=".4"/>
+        <!-- Tronco -->
+        <path d="M 47 100 Q 48 75 49 50 Q 50 25 51 5 Q 52 25 53 50 Q 54 75 53 100 Z" fill="#5c3a1e" opacity=".8"/>
+        <!-- Ramas -->
+        <path d="M 50 30 Q 30 28 18 35" stroke="#5c3a1e" stroke-width="1.5" fill="none" opacity=".7"/>
+        <path d="M 50 30 Q 70 28 82 35" stroke="#5c3a1e" stroke-width="1.5" fill="none" opacity=".7"/>
+        <path d="M 50 50 Q 35 50 25 60" stroke="#5c3a1e" stroke-width="1.5" fill="none" opacity=".7"/>
+        <path d="M 50 50 Q 65 50 75 60" stroke="#5c3a1e" stroke-width="1.5" fill="none" opacity=".7"/>
+        <path d="M 50 70 Q 40 73 32 78" stroke="#5c3a1e" stroke-width="1.2" fill="none" opacity=".7"/>
+        <path d="M 50 70 Q 60 73 68 78" stroke="#5c3a1e" stroke-width="1.2" fill="none" opacity=".7"/>
+        <!-- Copa -->
+        <ellipse cx="50" cy="20" rx="32" ry="20" fill="#52b788" opacity=".4"/>
+        <ellipse cx="22" cy="42" rx="20" ry="14" fill="#74c69d" opacity=".35"/>
+        <ellipse cx="78" cy="42" rx="20" ry="14" fill="#74c69d" opacity=".35"/>
+        <ellipse cx="50" cy="55" rx="30" ry="15" fill="#2d9e6a" opacity=".3"/>
+        <ellipse cx="28" cy="72" rx="16" ry="10" fill="#52b788" opacity=".35"/>
+        <ellipse cx="72" cy="72" rx="16" ry="10" fill="#52b788" opacity=".35"/>
+        <!-- Frutas (pacientes) -->
+        ${frutas}
+        <!-- Mariposas decorativas -->
+        <g>
+          <ellipse cx="10" cy="60" rx="3" ry="2" fill="#f4845f" opacity=".7"/>
+          <ellipse cx="10" cy="60" rx="2" ry="3" fill="#f4845f" opacity=".7"/>
+        </g>
+        <g>
+          <ellipse cx="92" cy="65" rx="3" ry="2" fill="#e8a82e" opacity=".7"/>
+          <ellipse cx="92" cy="65" rx="2" ry="3" fill="#e8a82e" opacity=".7"/>
+        </g>
+      </svg>
+      <div style="position:absolute;top:8px;left:0;right:0;text-align:center;z-index:2;pointer-events:none">
+        <div style="font-size:13px;font-weight:700;color:var(--teal2);text-shadow:0 1px 4px rgba(0,0,0,.6)">🌳 Bosque de Pacientes</div>
+        <div style="font-size:10px;color:var(--text3);text-shadow:0 1px 3px rgba(0,0,0,.6)">Toca cada fruta para abrir</div>
+      </div>
+    </div>
+    ${extra.length?`<div style="margin-top:10px"><div class="section-label">+ ${extra.length} más en lista</div>${extra.map(([id,p],i)=>{
+      const ii=posiciones.length+i;
+      const bg=AV_BG[ii%AV_BG.length], col=AV_COL[ii%AV_COL.length];
+      const avatarHTML = p.fotoURL
+        ? `<div class="p-avatar" style="padding:0;overflow:hidden"><img src="${p.fotoURL}" alt="${ini(p.nombre)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></div>`
+        : `<div class="p-avatar" style="background:${bg};color:${col}">${ini(p.nombre)}</div>`;
+      return `<div class="patient-card" onclick="abrirPaciente('${id}')">${avatarHTML}<div style="flex:1;min-width:0"><div class="p-name">${p.nombre}</div><div class="p-meta">${p.hc||'—'}</div></div></div>`;
+    }).join('')}</div>`:''}
+  `;
 }
 
 // ── DETALLE ───────────────────────────────────────────────────────
@@ -1877,50 +2115,180 @@ function eliminarTerapeuta(tid){
 }
 
 // ── PLAN ──────────────────────────────────────────────────────────
+let _planVista = 'lista'; // 'lista' o 'arbol'
+function togglePlanVista(v){ _planVista = v; renderPlan(); }
+
 function renderPlan(){
   const p=pacientes[pacienteActivo];
   const pl=arrOf(p.plan);
   const todasSes=arrOf(p.sesiones);
   const esAdmin=usuarioActual?.esAdmin;
   const miTipo=getMiTipoEnPaciente();
-  // Admin ve todo, terapeuta solo su especialidad
   const plFiltrado=esAdmin ? pl : pl.filter(o=>o.tipo===miTipo);
   const puedeAgregar=esAdmin||!!miTipo;
-  document.getElementById('panel-2').innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+
+  // Preparar datos de progreso para cada objetivo
+  const objConProgreso = plFiltrado.map(o=>{
+    const sesReal=todasSes.filter(s=>s.objetivoTrabajado&&s.objetivoTrabajado===o.objetivo).length;
+    const plani=o.sesionesPlani||o.frec||0;
+    const pct=plani>0?Math.min(Math.round(sesReal/plani*100),100):0;
+    return {...o, sesReal, plani, pct, idx: pl.indexOf(o)};
+  });
+
+  const header = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap">
       <div style="font-size:14px;font-weight:700;color:var(--teal2)">
-        ${esAdmin?'Plan terapéutico completo':`Mi plan — ${miTipo||'Sin especialidad asignada'}`}
+        ${esAdmin?'Plan terapéutico':`Mi plan — ${miTipo||'Sin especialidad'}`}
       </div>
-      ${puedeAgregar?`<button class="btn btn-teal" style="flex:none;padding:6px 14px;font-size:12px" onclick="document.getElementById('p-modal-title').textContent='Nuevo objetivo terapéutico';document.getElementById('p-edit-idx').value='-1';document.getElementById('p-diag').value='';onPlanDiagChange();openModal('modal-plan')">+ Objetivo</button>`:''}
+      <div style="display:flex;gap:6px;align-items:center">
+        <button onclick="togglePlanVista('lista')" style="padding:5px 11px;border-radius:18px;border:1px solid ${_planVista==='lista'?'var(--teal)':'rgba(255,245,225,.13)'};background:${_planVista==='lista'?'rgba(82,183,136,.18)':'transparent'};color:${_planVista==='lista'?'var(--teal2)':'var(--text3)'};font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">📋 Lista</button>
+        <button onclick="togglePlanVista('arbol')" style="padding:5px 11px;border-radius:18px;border:1px solid ${_planVista==='arbol'?'var(--teal)':'rgba(255,245,225,.13)'};background:${_planVista==='arbol'?'rgba(82,183,136,.18)':'transparent'};color:${_planVista==='arbol'?'var(--teal2)':'var(--text3)'};font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">🌳 Árbol</button>
+        ${puedeAgregar?`<button class="btn btn-teal" style="flex:none;padding:6px 14px;font-size:12px" onclick="document.getElementById('p-modal-title').textContent='Nuevo objetivo terapéutico';document.getElementById('p-edit-idx').value='-1';document.getElementById('p-diag').value='';onPlanDiagChange();openModal('modal-plan')">+ Objetivo</button>`:''}
+      </div>
     </div>
-    ${!miTipo&&!esAdmin?`<div class="card" style="background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.2);margin-bottom:10px;padding:12px 14px"><div style="font-size:12px;color:var(--amber)">⚠️ No estás asignada como terapeuta de este paciente. Contacta al administrador.</div></div>`:''}
-    ${!plFiltrado.length?'<div class="card"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Sin objetivos registrados</div></div></div>':
-      plFiltrado.map(o=>{
-        const sesReal=todasSes.filter(s=>s.objetivoTrabajado&&s.objetivoTrabajado===o.objetivo).length;
-        const plani=o.sesionesPlani||o.frec||0;
-        const pct=plani>0?Math.min(Math.round(sesReal/plani*100),100):0;
-        const colorBarra=pct>=100?'#52b788':pct>=50?'#f4b942':'#e8674a';
-        const idx=pl.indexOf(o);
-        const puedoEditar=puedeEditarPlan(o);
-        return`<div class="plan-card">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px">
-            <div style="font-size:12px;font-weight:500;line-height:1.45;flex:1">${o.objetivo}</div>
-            ${puedoEditar?`<div style="display:flex;gap:5px;flex-shrink:0">
-              <button class="btn-edit" onclick="editarObjetivoPlan(${idx})" style="font-size:10px;padding:3px 8px" title="Editar">✏️</button>
-              <button class="btn-del" onclick="eliminarObjetivoPlan(${idx})" style="font-size:10px;padding:3px 8px" title="Eliminar">🗑</button>
-            </div>`:''}
-          </div>
-          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">${tag(o.tipo)}${o.diagnostico&&o.diagnostico!==pacientes[pacienteActivo]?.dx?`<span class="tag t-amber" style="font-size:9px">${o.diagnostico.split('—')[0].trim()}</span>`:''}<span class="tag t-gray">${o.dominio&&esDxTEA(o.diagnostico)?o.dominio:''}</span><span class="tag t-navy">${o.nivel}</span></div>
-          ${plani>0?`<div style="margin-bottom:4px">
-            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
-              <span style="color:var(--text3)">Progreso: ${sesReal} de ${plani} sesiones planificadas</span>
-              <span style="font-weight:600;color:${colorBarra}">${pct}%</span>
-            </div>
-            <div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${colorBarra}"></div></div>
+    ${!miTipo&&!esAdmin?`<div class="card" style="background:rgba(244,185,66,.06);border-color:rgba(244,185,66,.2);margin-bottom:10px;padding:12px 14px"><div style="font-size:12px;color:var(--amber)">⚠️ No estás asignada como terapeuta de este paciente.</div></div>`:''}
+  `;
+
+  if(!plFiltrado.length){
+    document.getElementById('panel-2').innerHTML = header +
+      '<div class="card"><div class="empty-state"><div class="empty-icon">🌱</div><div class="empty-text">Sin objetivos registrados<br><span style="font-size:11px;opacity:.7">Cuando agregues el primero, verás crecer tu árbol</span></div></div></div>';
+    return;
+  }
+
+  if(_planVista === 'arbol'){
+    document.getElementById('panel-2').innerHTML = header + renderPlanArbol(objConProgreso, p);
+    return;
+  }
+
+  // Vista lista (original)
+  document.getElementById('panel-2').innerHTML = header +
+    objConProgreso.map(o=>{
+      const colorBarra=o.pct>=100?'#52b788':o.pct>=50?'#f4b942':'#e8674a';
+      const puedoEditar=puedeEditarPlan(o);
+      return`<div class="plan-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px">
+          <div style="font-size:12px;font-weight:500;line-height:1.45;flex:1">${o.objetivo}</div>
+          ${puedoEditar?`<div style="display:flex;gap:5px;flex-shrink:0">
+            <button class="btn-edit" onclick="editarObjetivoPlan(${o.idx})" style="font-size:10px;padding:3px 8px" title="Editar">✏️</button>
+            <button class="btn-del" onclick="eliminarObjetivoPlan(${o.idx})" style="font-size:10px;padding:3px 8px" title="Eliminar">🗑</button>
           </div>`:''}
-          <div style="font-size:11px;color:var(--text3)">${o.terapeuta||''}</div>
-        </div>`;
-      }).join('')}`;
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">${tag(o.tipo)}${o.diagnostico&&o.diagnostico!==p?.dx?`<span class="tag t-amber" style="font-size:9px">${o.diagnostico.split('—')[0].trim()}</span>`:''}${o.dominio&&esDxTEA(o.diagnostico)?`<span class="tag t-gray">${o.dominio}</span>`:''}<span class="tag t-navy">${o.nivel||''}</span></div>
+        ${o.plani>0?`<div style="margin-bottom:4px">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+            <span style="color:var(--text3)">Progreso: ${o.sesReal} de ${o.plani} sesiones</span>
+            <span style="font-weight:600;color:${colorBarra}">${o.pct}%</span>
+          </div>
+          <div class="prog-track"><div class="prog-fill" style="width:${o.pct}%;background:${colorBarra}"></div></div>
+        </div>`:''}
+        <div style="font-size:11px;color:var(--text3)">${o.terapeuta||''}</div>
+      </div>`;
+    }).join('');
+}
+
+// ── VISTA ÁRBOL DEL PLAN ─────────────────────────────────────────
+function renderPlanArbol(objetivos, paciente){
+  const n = objetivos.length;
+  // Distribuir frutas en posiciones del árbol
+  const ramas = [
+    {x:30, y:38}, {x:50, y:25}, {x:70, y:38},
+    {x:20, y:55}, {x:42, y:52}, {x:58, y:52}, {x:80, y:55},
+    {x:30, y:70}, {x:50, y:75}, {x:70, y:70},
+    {x:38, y:88}, {x:62, y:88}
+  ];
+
+  const frutas = objetivos.map((o, i) => {
+    const pos = ramas[i % ramas.length];
+    let color, ringColor, glow;
+    if(o.pct >= 100){ color = '#52b788'; ringColor = '#74c69d'; glow = 'rgba(82,183,136,.6)'; }
+    else if(o.pct >= 50){ color = '#f4b942'; ringColor = '#f4d77a'; glow = 'rgba(244,185,66,.5)'; }
+    else if(o.pct > 0){ color = '#f4845f'; ringColor = '#f7a385'; glow = 'rgba(244,132,95,.45)'; }
+    else { color = '#e8674a'; ringColor = '#f08770'; glow = 'rgba(232,103,74,.35)'; }
+    const tipoColor = TIPO_HEX[o.tipo] || color;
+    return `
+      <g class="fruta-grupo" style="cursor:pointer" onclick="mostrarObjetivoFruta(${o.idx})">
+        <circle cx="${pos.x}%" cy="${pos.y}%" r="22" fill="${color}" opacity=".25" class="fruta-glow"/>
+        <circle cx="${pos.x}%" cy="${pos.y}%" r="14" fill="${color}" stroke="${ringColor}" stroke-width="2.5" style="filter:drop-shadow(0 0 8px ${glow})"/>
+        <circle cx="${pos.x}%" cy="${pos.y}%" r="6" fill="${ringColor}" opacity=".7"/>
+        <text x="${pos.x}%" y="${pos.y}%" text-anchor="middle" dominant-baseline="central" font-size="10" font-weight="700" fill="white">${o.pct}%</text>
+      </g>`;
+  }).join('');
+
+  const completados = objetivos.filter(o=>o.pct>=100).length;
+  const enProgreso = objetivos.filter(o=>o.pct>0&&o.pct<100).length;
+
+  return `
+    <style>
+      .fruta-grupo:hover circle{transform-origin:center;animation:fruitPulse .6s ease infinite}
+      @keyframes fruitPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+      .swing-leaf{transform-origin:center bottom;animation:leafSwing 4s ease-in-out infinite}
+      @keyframes leafSwing{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+    </style>
+    <div class="card" style="padding:0;overflow:hidden;background:linear-gradient(180deg,rgba(82,183,136,.05) 0%,rgba(13,31,18,.4) 50%,rgba(82,183,136,.08) 100%);position:relative;min-height:480px">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
+        <!-- Cielo difuminado -->
+        <defs>
+          <radialGradient id="sunGlow"><stop offset="0%" stop-color="#f4b942" stop-opacity=".6"/><stop offset="100%" stop-color="#f4b942" stop-opacity="0"/></radialGradient>
+        </defs>
+        <circle cx="85" cy="12" r="10" fill="url(#sunGlow)"/>
+        <circle cx="85" cy="12" r="4" fill="#f4b942" opacity=".7"/>
+        <!-- Pasto suelo -->
+        <ellipse cx="50" cy="100" rx="60" ry="12" fill="#2d9e6a" opacity=".35"/>
+        <ellipse cx="50" cy="100" rx="45" ry="6" fill="#52b788" opacity=".4"/>
+        <!-- Tronco principal -->
+        <path d="M 48 100 Q 48 80 49 60 Q 49 45 50 30 Q 51 45 51 60 Q 52 80 52 100 Z" fill="#5c3a1e"/>
+        <path d="M 49 95 Q 50 90 51 85" stroke="#3d2817" stroke-width=".3" fill="none" opacity=".6"/>
+        <path d="M 49 75 Q 50 70 51 65" stroke="#3d2817" stroke-width=".3" fill="none" opacity=".6"/>
+        <!-- Ramas -->
+        <path d="M 50 60 Q 40 55 30 50" stroke="#5c3a1e" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M 50 55 Q 60 50 70 48" stroke="#5c3a1e" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M 50 45 Q 42 40 35 35" stroke="#5c3a1e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M 50 40 Q 58 35 65 32" stroke="#5c3a1e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M 50 50 L 50 25" stroke="#5c3a1e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- Copa frondosa: nubes de hojas -->
+        <g class="swing-leaf">
+          <ellipse cx="30" cy="38" rx="18" ry="14" fill="#2d9e6a" opacity=".55"/>
+          <ellipse cx="50" cy="25" rx="22" ry="18" fill="#52b788" opacity=".55"/>
+          <ellipse cx="70" cy="38" rx="18" ry="14" fill="#2d9e6a" opacity=".55"/>
+          <ellipse cx="22" cy="55" rx="13" ry="10" fill="#74c69d" opacity=".5"/>
+          <ellipse cx="78" cy="55" rx="13" ry="10" fill="#74c69d" opacity=".5"/>
+          <ellipse cx="50" cy="50" rx="20" ry="12" fill="#52b788" opacity=".4"/>
+          <ellipse cx="38" cy="70" rx="10" ry="8" fill="#74c69d" opacity=".5"/>
+          <ellipse cx="62" cy="70" rx="10" ry="8" fill="#74c69d" opacity=".5"/>
+        </g>
+        <!-- Frutas (objetivos) -->
+        ${frutas}
+        <!-- Mariposas -->
+        <g>
+          <path d="M 15 75 Q 13 73 12 75 Q 13 77 15 76 Z" fill="#f4845f" opacity=".7"/>
+          <path d="M 15 75 Q 17 73 18 75 Q 17 77 15 76 Z" fill="#f4b942" opacity=".7"/>
+        </g>
+        <g>
+          <path d="M 85 80 Q 83 78 82 80 Q 83 82 85 81 Z" fill="#e8674a" opacity=".7"/>
+          <path d="M 85 80 Q 87 78 88 80 Q 87 82 85 81 Z" fill="#e8a82e" opacity=".7"/>
+        </g>
+      </svg>
+      <!-- Resumen abajo -->
+      <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,transparent,rgba(7,15,9,.92));padding:30px 16px 16px;z-index:2">
+        <div style="display:flex;justify-content:space-around;gap:8px;text-align:center">
+          <div><div style="font-size:18px;font-weight:700;color:#52b788">${completados}</div><div style="font-size:9px;color:var(--text3);text-transform:uppercase">🟢 Completados</div></div>
+          <div><div style="font-size:18px;font-weight:700;color:#f4b942">${enProgreso}</div><div style="font-size:9px;color:var(--text3);text-transform:uppercase">🟡 En progreso</div></div>
+          <div><div style="font-size:18px;font-weight:700;color:#e8674a">${objetivos.length-completados-enProgreso}</div><div style="font-size:9px;color:var(--text3);text-transform:uppercase">🔴 Por empezar</div></div>
+        </div>
+        <div style="text-align:center;font-size:10px;color:var(--text3);margin-top:10px;font-style:italic">Toca cada fruta 🍎 para ver el objetivo</div>
+      </div>
+    </div>`;
+}
+
+function mostrarObjetivoFruta(idx){
+  const pl = arrOf(pacientes[pacienteActivo]?.plan);
+  const o = pl[idx];
+  if(!o) return;
+  const todasSes = arrOf(pacientes[pacienteActivo]?.sesiones);
+  const sesReal = todasSes.filter(s=>s.objetivoTrabajado===o.objetivo).length;
+  const plani = o.sesionesPlani||0;
+  const pct = plani>0?Math.min(Math.round(sesReal/plani*100),100):0;
+  alert(`🎯 ${o.objetivo}\n\n📋 ${o.tipo}\n${o.terapeuta?'👤 '+o.terapeuta+'\n':''}${o.dominio?'🧠 '+o.dominio+'\n':''}📊 Progreso: ${sesReal}/${plani} sesiones (${pct}%)\n\nNivel: ${o.nivel||'—'}`);
 }
 
 // ── SESIONES ──────────────────────────────────────────────────────
