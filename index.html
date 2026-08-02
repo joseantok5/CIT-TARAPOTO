@@ -3643,6 +3643,7 @@ function guardarTerapeuta(){
 
   const editId=document.getElementById('t-edit-idx').value;
   const tid = editId || ('ter_'+Date.now());
+  const nombreAnterior = editId ? (equipo[editId]?.nombre || '') : '';
 
   equipo[tid] = {
     tipo, nombre,
@@ -3654,9 +3655,33 @@ function guardarTerapeuta(){
   };
 
   // Siempre escribir como objeto limpio — esto también migra datos viejos
-  DB.child(`pacientes/${pacienteActivo}/equipo`).set(equipo)
+  const promesas = [DB.child(`pacientes/${pacienteActivo}/equipo`).set(equipo)];
+
+  // Si se renombró un terapeuta existente, propagar el nombre nuevo a las
+  // sesiones, objetivos de plan e hitos ya guardados (antes quedaban con el nombre viejo)
+  let registrosActualizados = 0;
+  if(editId && nombreAnterior && nombreAnterior!==nombre){
+    const p = pacientes[pacienteActivo] || {};
+    const ses = arrOf(p.sesiones).map(s=>{
+      if(s.terapeuta===nombreAnterior){ registrosActualizados++; return {...s, terapeuta:nombre}; }
+      return s;
+    });
+    const pl = arrOf(p.plan).map(o=>{
+      if(o.terapeuta===nombreAnterior){ registrosActualizados++; return {...o, terapeuta:nombre}; }
+      return o;
+    });
+    const hit = arrOf(p.hitos).map(h=>{
+      if(h.terapeuta===nombreAnterior){ registrosActualizados++; return {...h, terapeuta:nombre}; }
+      return h;
+    });
+    promesas.push(DB.child(`pacientes/${pacienteActivo}/sesiones`).set(ses));
+    promesas.push(DB.child(`pacientes/${pacienteActivo}/plan`).set(pl));
+    promesas.push(DB.child(`pacientes/${pacienteActivo}/hitos`).set(hit));
+  }
+
+  Promise.all(promesas)
     .then(()=>{
-      toast(editId?'Terapeuta actualizado':'Terapeuta agregado');
+      toast(editId?(registrosActualizados?`Terapeuta actualizado (${registrosActualizados} registro(s) renombrados)`:'Terapeuta actualizado'):'Terapeuta agregado');
       closeModal('modal-ter');
       ['t-nombre','t-email','t-tel','t-col','t-frec'].forEach(i=>document.getElementById(i).value='');
       document.getElementById('t-tipo').value='';
